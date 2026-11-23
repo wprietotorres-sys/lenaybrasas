@@ -10,7 +10,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-const W = 4.2, H = 3.15, SEG_X = 287, SEG_Y = 215, RELIEF = 1.35;
+const W = 4.2, H = 3.15, SEG_X = 287, SEG_Y = 215, RELIEF = 1.05;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 3;
 const texLoader = new THREE.TextureLoader();
@@ -92,15 +92,14 @@ function initScene() {
   renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lowEnd ? 1.5 : 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMapping = THREE.NoToneMapping;
   ui.prepend(renderer.domElement);
 
   scene = new THREE.Scene();
   scene.background = backdropTex();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.12;
 
   camera = new THREE.PerspectiveCamera(34, 1, 0.05, 100);
   controls = new OrbitControls(camera, renderer.domElement);
@@ -109,21 +108,20 @@ function initScene() {
   controls.enablePan = false;
   controls.rotateSpeed = 0.55;
   controls.zoomSpeed = 0.8;
-  controls.minAzimuthAngle = -0.55;
-  controls.maxAzimuthAngle = 0.55;
+  controls.minAzimuthAngle = -0.45;
+  controls.maxAzimuthAngle = 0.45;
   controls.minPolarAngle = 1.1;
   controls.maxPolarAngle = 1.78;
   controls.addEventListener('start', () => { interacting = true; introT = 1; fadeHint(); });
   controls.addEventListener('end', () => { interacting = false; lastInteract = clock.elapsedTime; });
 
-  scene.add(new THREE.AmbientLight(0xffe3c8, 0.35));
-  key = new THREE.DirectionalLight(0xfff1de, 3.2);
+  key = new THREE.DirectionalLight(0xfff4e8, 0.5);
   key.position.set(2, 2.5, 3);
   scene.add(key);
-  rim = new THREE.PointLight(0xff6a1a, 26, 14, 2);
+  rim = new THREE.PointLight(0xff7a2a, 4, 10, 2);
   rim.position.set(0, 2.2, -2.2);
   scene.add(rim);
-  const under = new THREE.PointLight(0xff8a2a, 8, 9, 2);
+  const under = new THREE.PointLight(0xff8a2a, 1.2, 8, 2);
   under.position.set(0, -2.4, 1.2);
   scene.add(under);
 
@@ -138,14 +136,14 @@ function initScene() {
   scene.add(steam);
 
   // chispas: capa lejana nítida y capa cercana desenfocada (bokeh)
-  farEmbers = emberLayer(110, 0.045, -1.5, 1.2, 0.95);
-  nearEmbers = emberLayer(16, 0.35, 2.2, 3.4, 0.35);
+  farEmbers = emberLayer(70, 0.04, -1.5, 0.2, 0.8);
+  nearEmbers = emberLayer(8, 0.3, 2.4, 3.4, 0.2);
   scene.add(farEmbers, nearEmbers);
 
   // postproceso: bloom + gradación cálida + viñeta + grano
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.26, 0.5, 0.86);
+  bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.12, 0.4, 0.97);
   composer.addPass(bloom);
   grade = new ShaderPass({
     uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uFade: { value: 0 } },
@@ -153,10 +151,10 @@ function initScene() {
     fragmentShader: `uniform sampler2D tDiffuse;uniform float uTime;uniform float uFade;varying vec2 vUv;
       float h(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
       void main(){vec4 c=texture2D(tDiffuse,vUv);
-        c.rgb=mix(c.rgb,c.rgb*vec3(1.06,1.0,.9),.6);
-        float l=dot(c.rgb,vec3(.299,.587,.114));c.rgb=mix(vec3(l),c.rgb,1.12);
-        float v=smoothstep(.95,.25,length(vUv-.5)*1.15);c.rgb*=mix(.55,1.,v);
-        c.rgb+=(h(vUv*vec2(1920.,1080.)+uTime)-.5)*.025;
+        float l=dot(c.rgb,vec3(.299,.587,.114));c.rgb=mix(vec3(l),c.rgb,1.06);
+        c.rgb=(c.rgb-.5)*1.05+.5;
+        float v=smoothstep(1.,.3,length(vUv-.5)*1.15);c.rgb*=mix(.7,1.,v);
+        c.rgb+=(h(vUv*vec2(1920.,1080.)+uTime)-.5)*.01;
         c.rgb*=uFade;gl_FragColor=c;}`
   });
   composer.addPass(grade);
@@ -230,11 +228,10 @@ async function buildDish(it) {
   const d = cx.getImageData(0, 0, SEG_X + 1, SEG_Y + 1).data, p = geo.attributes.position;
   for (let i = 0; i < p.count; i++) p.setZ(i, Math.pow(d[i * 4] / 255, 1.15) * RELIEF);
   geo.computeVertexNormals();
-  const mat = new THREE.MeshPhysicalMaterial({
-    map: tex, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.3,
+  // la foto manda: el color sale casi tal cual y la luz solo marca el relieve y un brillo leve en las salsas
+  const mat = new THREE.MeshStandardMaterial({
+    map: tex, emissiveMap: tex, emissive: 0xffffff, emissiveIntensity: 0.72,
     roughnessMap: rough, roughness: 1, metalness: 0,
-    clearcoat: 0.55, clearcoatRoughnessMap: rough, clearcoatRoughness: 0.9,
-    sheen: 0.25, sheenColor: new THREE.Color(0xffc58a), sheenRoughness: 0.6,
     alphaMap: vignetteTex(), transparent: true, side: THREE.DoubleSide
   });
   const m = new THREE.Mesh(geo, mat);
@@ -334,15 +331,15 @@ function tick() {
   // luz que barre el plato: hace brillar salsas y glaseados
   const sw = Math.sin(t * 0.55);
   key.position.set(sw * 3.2 + ptr.x * 2.5, 2.4 - ptr.y * 2, 2.6);
-  key.intensity = 3 + Math.sin(t * 1.7) * 0.25;
-  rim.intensity = 24 + Math.sin(t * 3.1) * 3 + Math.sin(t * 7.3) * 1.5;
+  key.intensity = 0.5 + Math.sin(t * 1.7) * 0.05;
+  rim.intensity = 4 + Math.sin(t * 3.1) * .6 + Math.sin(t * 7.3) * .3;
 
   steam.children.forEach(s => {
     const u = s.userData; u.ph = (u.ph + dt * u.sp) % 1;
-    s.position.set(u.x * .8 + Math.sin((u.ph + u.x) * 5) * .15, 0.2 + u.ph * 1.5, u.z - .4);
+    s.position.set(u.x * .8 + Math.sin((u.ph + u.x) * 5) * .15, 0.7 + u.ph * 1.4, -0.5);
     const sc = .6 + u.ph * 1.8; s.scale.set(sc, sc, 1);
     s.material.rotation += u.rot * dt;
-    s.material.opacity = Math.sin(u.ph * Math.PI) * 0.055;
+    s.material.opacity = Math.sin(u.ph * Math.PI) * 0.04;
   });
   [farEmbers, nearEmbers].forEach(L => {
     const ep = L.geometry.attributes.position, spd = L.userData.spd;
