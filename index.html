@@ -198,6 +198,12 @@ footer p{color:var(--mute);margin:8px 0}
 .locbox{margin-top:12px;border-radius:16px;border:1px solid var(--line);background:var(--card);padding:12px 14px;text-align:left;font-size:14px}
 .locbox b{color:var(--fire2)}
 .lbl{margin:16px 0 0;font-weight:800;font-size:15px}
+.yapebox.big .amt{font-family:Bebas,sans-serif;font-size:46px;line-height:1}
+.ysteps{margin:12px 0 0;padding-left:20px;font-size:14px;color:var(--mute);display:grid;gap:4px}
+.ysteps b{color:var(--ink)}
+.chk{display:flex!important;align-items:center;gap:12px;margin-top:14px!important;min-height:56px;padding:0 14px;border-radius:14px;border:2px solid var(--yape);background:rgba(116,34,132,.18);color:var(--ink)!important;font-size:16px!important;cursor:pointer}
+.chk input{width:24px!important;height:24px;min-height:0!important;margin:0!important;accent-color:#25d366;flex:none}
+.wa[aria-disabled=true]{opacity:.45;filter:grayscale(.5)}
 .yapebox{margin-top:12px;border-radius:18px;background:var(--yape);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
 .yapebox .num{font-family:Bebas,sans-serif;font-size:32px;line-height:1}
 .yapebox small{display:block;opacity:.9}
@@ -244,7 +250,7 @@ footer p{color:var(--mute);margin:8px 0}
       <div class="dots" id="dots" aria-label="Elegir plato"></div>
     </div>
     <div class="h-r">
-      <ol class="steps"><li><b>1</b> Elige tus platos</li><li><b>2</b> Envía por WhatsApp</li><li><b>3</b> Paga con Yape o efectivo</li></ol>
+      <ol class="steps"><li><b>1</b> Elige tus platos</li><li><b>2</b> Envía por WhatsApp</li><li><b>3</b> Paga con Yape</li></ol>
       <div class="today" id="today"></div>
       <div class="ctas"><a class="cta" href="#carta">Ver la carta</a><a class="cta ghost" href="#promos">Promos de la semana</a></div>
     </div>
@@ -291,7 +297,7 @@ footer p{color:var(--mute);margin:8px 0}
 <footer><div class="wrap">
   <div class="logo">Leña y Brasas</div>
   <p>Av. Luis Pardo 116, Villa María del Triunfo</p>
-  <p>Delivery o recojo en el local · Pago con Yape o efectivo</p>
+  <p>Delivery o recojo en tienda · Pago con Yape</p>
   <a class="wabtn" href="https://wa.me/51920164583" target="_blank" rel="noopener"><svg class="wai"><use href="#i-wa"/></svg>WhatsApp 920 164 583</a>
   <p style="font-size:12px;margin-top:18px">Fotos referenciales.</p>
 </div></footer>
@@ -333,14 +339,13 @@ footer p{color:var(--mute);margin:8px 0}
       <p class="lbl">¿Cómo recibes tu pedido?</p>
       <div class="seg" id="mode3"><button data-m="Delivery" class="on">Delivery</button><button data-m="Recojo en tienda">Recojo en tienda</button></div>
       <p class="note" id="modeNote"></p>
-      <p class="lbl">¿Cómo vas a pagar?</p>
-      <div class="seg" id="pay"><button data-p="Yape" class="yp on">Yape</button><button data-p="Efectivo">Efectivo</button></div>
-      <div id="yapeWrap">
-        <div class="yapebox"><div><small>Yapea al</small><div class="num">920 164 583</div><small>Leña y Brasas</small></div><button id="copyYape">Copiar número</button></div>
-        <p class="note" style="margin-top:8px">Después de enviar el pedido, yapea y manda la captura en el mismo chat. Apenas la recibimos, empezamos a preparar.</p>
-      </div>
-      <div id="cashWrap" hidden><p class="note" id="cashNote" style="margin-top:8px">Pagas en efectivo al recibir tu pedido.</p><label>¿Con cuánto vas a pagar? (para tu vuelto)<input id="cash" inputmode="decimal" placeholder="Ej. 50"></label></div>
-      <a class="wa" id="wa" target="_blank" rel="noopener"><svg class="wai"><use href="#i-wa"/></svg>Enviar pedido por WhatsApp</a>
+      <p class="lbl">Paga con Yape para confirmar tu pedido</p>
+      <div class="yapebox big"><div><small>Yapea</small><div class="amt" id="yAmt">S/ 0</div><small>al <b>920 164 583</b> · Leña y Brasas</small></div><button id="copyYape">Copiar número</button></div>
+      <ol class="ysteps"><li>Abre Yape y envía el monto al <b>920 164 583</b>.</li><li>Marca «Ya yapeé» y toca <b>Enviar pedido</b>.</li><li>En el chat, adjunta la captura de tu Yape.</li></ol>
+      <p class="note" id="delPayNote">El delivery se cobra aparte: te confirmamos el monto por WhatsApp y lo yapeas ahí mismo.</p>
+      <label class="chk"><input type="checkbox" id="paid"><span>Ya yapeé <b id="paidAmt">S/ 0</b></span></label>
+      <p class="note">Tu pedido entra a cocina apenas confirmamos tu Yape.</p>
+      <a class="wa" id="wa" target="_blank" rel="noopener" aria-disabled="true"><svg class="wai"><use href="#i-wa"/></svg>Enviar pedido por WhatsApp</a>
       <button class="back" data-back="2">Volver</button>
     </div>
 
@@ -348,7 +353,7 @@ footer p{color:var(--mute);margin:8px 0}
       <div class="ok">✓</div>
       <h2>¡Pedido enviado!</h2>
       <p class="note" id="doneTxt" style="margin-top:8px"></p>
-      <div id="doneYape" class="yapebox" style="text-align:left"><div><small>Yapea <b id="doneTot"></b> al</small><div class="num">920 164 583</div><small>y manda la captura por WhatsApp</small></div><button id="copyYape2">Copiar</button></div>
+      <div id="doneYape" class="yapebox" style="text-align:left"><div><small>No olvides adjuntar en el chat</small><div class="num">la captura de tu Yape</div><small>de <b id="doneTot"></b> al 920 164 583</small></div><button id="copyYape2">Copiar número</button></div>
       <div class="locbox" id="locHelp" hidden><b>Falta tu ubicación:</b> en el chat de WhatsApp toca el clip <b>📎</b> (o <b>+</b> en iPhone) → <b>Ubicación</b> → <b>Enviar tu ubicación actual</b>.</div>
       <a class="wa" id="waAgain" target="_blank" rel="noopener"><svg class="wai"><use href="#i-wa"/></svg>Volver a abrir WhatsApp</a>
       <button class="back" id="newOrder">Hacer otro pedido</button>
@@ -433,7 +438,7 @@ document.querySelectorAll('.card').forEach((el,i)=>{el.style.transitionDelay=(i%
 const tabIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.tab===e.target.id));const a=document.querySelector(`.tabs a[data-tab="${e.target.id}"]`);a&&a.parentNode.scrollTo({left:a.offsetLeft-20,behavior:'smooth'})}}),{rootMargin:'-40% 0px -55% 0px'});
 document.querySelectorAll('.cat').forEach(s=>tabIo.observe(s));
 /* cart state */
-let cart={},mode='Delivery',pay='Yape',flavor='BBQ',step=1,loc=null;
+let cart={},mode='Delivery',flavor='BBQ',step=1,loc=null,place='';
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 cart=store.get('lyb-cart2',{});
 const me=store.get('lyb-me',{});['nombre','dir','ref'].forEach(k=>{if(me[k])$('#'+k).value=me[k]});if(me.loc&&Date.now()-me.loc.t<30*864e5)loc=me.loc;
@@ -454,9 +459,14 @@ const totals=()=>{let n=0,s=0;for(const k in cart){n+=cart[k];s+=cart[k]*info(k)
 let code=store.get('lyb-code',null);
 const newCode=()=>{code=Math.random().toString(36).slice(2,6).toUpperCase();store.set('lyb-code',code)};if(!code)newCode();
 const message=()=>{const {s}=totals();const L=Object.keys(cart).map(k=>`• ${cart[k]} x ${info(k).n} — ${sol(cart[k]*info(k).p)}`).join('\n');
- const dir=$('#dir').value.trim(),ref=$('#ref').value.trim(),nota=$('#nota').value.trim(),cash=$('#cash').value.trim();
- return `*NUEVO PEDIDO #${code}* — Leña y Brasas\n\n${L}\n\n*Total: ${sol(s)}*${mode==='Delivery'?' + delivery':''}\n\n*Nombre:* ${$('#nombre').value.trim()}\n*Entrega:* ${mode}${mode==='Delivery'?`${dir?`\n*Dirección:* ${dir}`:''}${ref?`\n*Referencia:* ${ref}`:''}\n*Ubicación GPS:* ${loc?mapUrl(loc):'te la envío por WhatsApp'}`:''}\n*Pago:* ${pay==='Yape'?`Yape al ${YAPE} (envío la captura aquí)`:`Efectivo${cash?`, pago con S/ ${cash}`:''}`}${nota?`\n*Nota:* ${nota}`:''}`};
-const mapUrl=l=>`https://maps.google.com/?q=${l.lat.toFixed(6)},${l.lng.toFixed(6)}`;
+ const dir=$('#dir').value.trim(),ref=$('#ref').value.trim(),nota=$('#nota').value.trim(),D=mode==='Delivery';
+ return `*NUEVO PEDIDO #${code}* — Leña y Brasas\n*${D?'🛵 DELIVERY':'🏪 RECOJO EN TIENDA'}*`
+  +(D?`\n📍 *Ubicación:* ${loc?mapUrl(loc):'te la envío por WhatsApp'}`:'')
+  +`\n\n${L}\n\n*Total: ${sol(s)}*${D?' + delivery':''}\n*Pago:* Yape ✅ ${sol(s)} al ${YAPE} (adjunto captura)`
+  +`\n\n*Nombre:* ${$('#nombre').value.trim()}`
+  +(D?`${dir?`\n*Dirección:* ${dir}`:''}${ref?`\n*Referencia:* ${ref}`:''}`:'')
+  +(nota?`\n*Nota:* ${nota}`:'')};
+const mapUrl=l=>`https://www.google.com/maps/search/?api=1&query=${l.lat.toFixed(6)},${l.lng.toFixed(6)}`;
 const waLink=()=>`https://wa.me/${WA}?text=${encodeURIComponent(message())}`;
 const render=()=>{
  const {n,s}=totals();
@@ -464,11 +474,11 @@ const render=()=>{
  $('#count').textContent=n;$('#fab').classList.toggle('hide',n>0);
  $('#bar').classList.toggle('show',n>0&&!$('#sheet').classList.contains('open'));
  $('#barTxt').textContent=`Ver pedido (${n})`;$('#barTot').textContent=sol(s);
- $('#total').textContent=sol(s);$('#total3').textContent=sol(s);$('#doneTot').textContent=sol(s);
+ $('#total').textContent=sol(s);$('#total3').textContent=sol(s);$('#doneTot').textContent=sol(s);$('#yAmt').textContent=sol(s);$('#paidAmt').textContent=sol(s);$('#delPayNote').hidden=mode!=='Delivery';
  $('#delNote').hidden=mode!=='Delivery';
  $('#lines').innerHTML=n?Object.keys(cart).map(k=>{const i=info(k);return `<div class="line"><img src="${i.img}" alt=""><div>${i.n}<small>${sol(i.p)} c/u</small><div class="qty"><button data-q="${k}" data-d="-1" aria-label="Quitar uno">−</button><b>${cart[k]}</b><button data-q="${k}" data-d="1" aria-label="Agregar uno">+</button></div></div><b style="white-space:nowrap">${sol(i.p*cart[k])}</b></div>`}).join(''):'<p class="empty">Tu pedido está vacío. Toca «+ Agregar» en cualquier plato.</p>';
  $('#go2').disabled=!n;$('#go2').style.opacity=n?1:.45;
- $('#wa').href=waLink();$('#waAgain').href=waLink();
+ $('#wa').href=waLink();$('#waAgain').href=waLink();$('#wa').setAttribute('aria-disabled',$('#paid').checked?'false':'true');
 };
 const show=s=>{step=s;[1,2,3,4].forEach(i=>$('#st'+i).hidden=i!==s);document.querySelectorAll('#prog i').forEach((el,i)=>el.classList.toggle('on',i<s));$('#prog').hidden=s===4;$('#stTitle').textContent=['','Mi pedido','Tus datos','Pago',''][s];$('.panel').scrollTop=0;render()};
 $('#go2').addEventListener('click',()=>{if(totals().n)show(2)});
@@ -477,27 +487,30 @@ $('#go3').addEventListener('click',()=>{const nom=$('#nombre'),dir=$('#dir');let
  const miss=[!nom.value.trim()&&'tu nombre',mode==='Delivery'&&!loc&&!dir.value.trim()&&'tu dirección (o toca «Usar mi ubicación actual»)'].filter(Boolean);$('#err2').textContent=ok?'':'Falta '+miss.join(' y ')+'.';
  if(ok){setMode(mode);store.set('lyb-me',{nombre:nom.value.trim(),dir:dir.value.trim(),ref:$('#ref').value.trim(),loc});show(3)}});
 document.querySelectorAll('[data-back]').forEach(b=>b.addEventListener('click',()=>show(+b.dataset.back)));
-const setMode=m=>{mode=m;document.querySelectorAll('#mode button,#mode3 button').forEach(x=>x.classList.toggle('on',x.dataset.m===m));$('#dirWrap').hidden=m!=='Delivery';$('#cashNote').textContent=m==='Delivery'?'Pagas en efectivo al recibir tu pedido.':'Pagas en efectivo al recoger en la tienda.';$('#modeNote').textContent=m==='Delivery'?(loc?'Entrega con tu ubicación GPS.':$('#dir').value.trim()?'Entrega en: '+$('#dir').value.trim():''):'Recógelo en Av. Luis Pardo 116, VMT.';render()};
+const setMode=m=>{mode=m;document.querySelectorAll('#mode button,#mode3 button').forEach(x=>x.classList.toggle('on',x.dataset.m===m));$('#dirWrap').hidden=m!=='Delivery';$('#modeNote').textContent=m==='Delivery'?(loc?'Entrega con tu ubicación GPS'+(place?': '+place:'.'):$('#dir').value.trim()?'Entrega en: '+$('#dir').value.trim():''):'Recógelo en Av. Luis Pardo 116, VMT.';render()};
 ['#mode','#mode3'].forEach(id=>$(id).addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(!b)return;play('tap');setMode(b.dataset.m);
  if(id==='#mode3'&&mode==='Delivery'&&!loc&&!$('#dir').value.trim()){show(2);$('#err2').textContent='Para delivery, toca «Usar mi ubicación actual» o escribe tu dirección.'}}));
-$('#pay').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;play('tap');pay=b.dataset.p;document.querySelectorAll('#pay button').forEach(x=>x.classList.toggle('on',x===b));$('#yapeWrap').hidden=pay!=='Yape';$('#cashWrap').hidden=pay==='Yape';render()});
-['#nombre','#dir','#ref','#nota','#cash'].forEach(s=>$(s).addEventListener('input',()=>{$(s).classList.remove('bad');render()}));
+['#nombre','#dir','#ref','#nota'].forEach(s=>$(s).addEventListener('input',()=>{$(s).classList.remove('bad');render()}));
+$('#paid').addEventListener('change',()=>{play($('#paid').checked?'add':'tap');render()});
 const copy=async()=>{try{await navigator.clipboard.writeText(YAPE);toast('Número copiado: '+YAPE)}catch(e){toast('Yape: 920 164 583')}};
 $('#copyYape').addEventListener('click',copy);$('#copyYape2').addEventListener('click',copy);
-$('#wa').addEventListener('click',()=>{play('send');$('#doneTxt').textContent=pay==='Yape'?`Tu pedido #${code} se abrió en WhatsApp. Envíalo y luego yapea:`:`Tu pedido #${code} se abrió en WhatsApp. Solo envía el mensaje y listo.`;$('#doneYape').hidden=pay!=='Yape';$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
-$('#newOrder').addEventListener('click',()=>{cart={};store.set('lyb-cart2',cart);newCode();close()});
+$('#wa').addEventListener('click',e=>{if(!$('#paid').checked){e.preventDefault();toast('Primero yapea y marca «Ya yapeé»');$('.chk').animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300});return}play('send');$('#doneTxt').textContent=`Tu pedido #${code} se abrió en WhatsApp. Envía el mensaje y adjunta tu captura.`;$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
+$('#newOrder').addEventListener('click',()=>{cart={};$('#paid').checked=false;store.set('lyb-cart2',cart);newCode();close()});
 const open=()=>{$('#sheet').classList.add('open');document.body.style.overflow='hidden';show(step===4?1:step)},close=()=>{$('#sheet').classList.remove('open');document.body.style.overflow='';if(step===4)step=1;render()};
 $('#openCart').addEventListener('click',open);$('#barBtn').addEventListener('click',open);$('#closeCart').addEventListener('click',close);$('#sheetBg').addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 render();
 /* ubicación por GPS */
+const lookup=async l=>{try{const c=new AbortController();setTimeout(()=>c.abort(),5000);const r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${l.lat}&lon=${l.lng}&zoom=18&accept-language=es`,{signal:c.signal});const j=await r.json();const a=j.address||{};
+ place=[[a.road,a.house_number].filter(Boolean).join(' '),a.neighbourhood||a.suburb,a.city_district||a.city||a.town].filter(Boolean).join(', ');
+ if(place){if(!$('#dir').value.trim())$('#dir').value=place;$('#gpsSt').insertAdjacentHTML('beforeend',`<br>Cerca de: ${place}. Revisa y agrega tu número de casa.`);render()}}catch(e){}};
 const gpsUI=(st,msg)=>{const b=$('#gpsBtn'),p=$('#gpsSt');b.classList.toggle('ok',st==='ok');b.classList.toggle('busy',st==='busy');$('#gpsTxt').textContent=st==='ok'?'Ubicación guardada':st==='busy'?'Buscando tu ubicación…':'Usar mi ubicación actual';p.className='gpsst'+(st==='ok'?' ok':st==='warn'?' warn':'');p.innerHTML=msg};
 if(loc)gpsUI('ok',`Listo, usaremos tu ubicación guardada. <a href="${mapUrl(loc)}" target="_blank" rel="noopener" style="color:inherit">Ver en el mapa</a>`);
 $('#gpsBtn').addEventListener('click',()=>{play('tap');
  if(!navigator.geolocation){gpsUI('warn','Tu navegador no permite el GPS aquí. Escribe tu dirección y luego envía tu ubicación por WhatsApp.');return}
  gpsUI('busy','Acepta el permiso de ubicación si tu teléfono lo pide.');
  navigator.geolocation.getCurrentPosition(pos=>{loc={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:Math.round(pos.coords.accuracy),t:Date.now()};
-   gpsUI('ok',`Listo (precisión ±${loc.acc} m). <a href="${mapUrl(loc)}" target="_blank" rel="noopener" style="color:inherit">Ver en el mapa</a>`);$('#dir').classList.remove('bad');$('#err2').textContent='';play('add');render()},
+   gpsUI('ok',`Listo (precisión ±${loc.acc} m). <a href="${mapUrl(loc)}" target="_blank" rel="noopener" style="color:inherit">Ver en el mapa</a>`);$('#dir').classList.remove('bad');$('#err2').textContent='';play('add');render();lookup(loc)},
   e=>{loc=null;gpsUI('warn',e.code===1?'No diste permiso de ubicación. Escribe tu dirección; al final te diremos cómo enviarla por WhatsApp.':'No pudimos obtener tu ubicación. Escribe tu dirección y envíala por WhatsApp al final.');render()},
   {enableHighAccuracy:true,timeout:15000,maximumAge:120000})});
 /* sonido: se fabrica en el teléfono como audio WAV (0 KB de descarga) y se reproduce con <audio>, que suena también en iPhone */
@@ -507,16 +520,40 @@ const wav=(dur,fn)=>{const sr=22050,n=Math.floor(sr*dur),b=new ArrayBuffer(44+n*
  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
  for(let i=0;i<n;i++){const x=Math.max(-1,Math.min(1,fn(i/sr)));v.setInt16(44+i*2,x*32767,true)}return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))};
 const env=(t,a,d)=>t<a?t/a:Math.exp(-(t-a)/d);
-const mkSnd=()=>{if(SND.add)return;let ph=0;
- SND.add=wav(.22,t=>{const f=t<.07?560+t*6000:980+t*900;ph+=2*Math.PI*f/22050;return .75*Math.sin(ph)*env(t,.004,.05)+.25*Math.sin(ph*2)*env(t,.004,.03)});
- SND.send=wav(.9,t=>[523,659,784,1047].reduce((a,f,i)=>{const s0=t-i*.11;return s0<0?a:a+.32*Math.sin(2*Math.PI*f*s0)*env(s0,.005,.22)},0));
- SND.tap=wav(.08,t=>.5*Math.sin(2*Math.PI*(700-t*3000)*t)*env(t,.002,.02));
- let lp=0;SND.whoosh=wav(.55,t=>{const r=Math.random()*2-1;lp+=.18*(r-lp);const cr=Math.random()<.004?(Math.random()*2-1)*.9:0;return (lp*.9+cr*.6)*Math.sin(Math.PI*t/.55)*.55});};
+const mkSnd=()=>{if(SND.add)return;const T=Math.PI*2;
+ const mar=(f,t)=>Math.sin(T*f*t)*Math.exp(-t/.16)+.18*Math.sin(T*f*4*t)*Math.exp(-t/.025);
+ SND.add=wav(.55,t=>.42*mar(659,t)+(t>.09?.34*mar(988,t-.09):0));
+ SND.tap=wav(.12,t=>.32*(Math.sin(T*880*t)*Math.exp(-t/.03)));
+ SND.send=wav(1.6,t=>[523,659,784,1047].reduce((a,f,i)=>{const s0=t-i*.14;return s0<0?a:a+.2*(Math.sin(T*f*s0)+.25*Math.sin(T*f*2*s0)*Math.exp(-s0/.2))*Math.exp(-s0/.6)},0));};
+/* ambiente de restaurante: acordes cálidos tipo lounge + murmullo y parrilla muy suaves (se fabrica en el teléfono, no se descarga) */
+let ambUrl=null,ambBusy=null;const amb=new Audio();amb.loop=true;amb.volume=.6;window.__amb=amb;
+const toWav=buf=>{const ch=buf.numberOfChannels,n=buf.length,sr=buf.sampleRate,b=new ArrayBuffer(44+n*ch*2),v=new DataView(b);const w=(o,t)=>{for(let i=0;i<t.length;i++)v.setUint8(o+i,t.charCodeAt(i))};
+ w(0,'RIFF');v.setUint32(4,36+n*ch*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,ch,true);v.setUint32(24,sr,true);v.setUint32(28,sr*ch*2,true);v.setUint16(32,ch*2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*ch*2,true);
+ const d=[...Array(ch)].map((_,c)=>buf.getChannelData(c));let o=44;for(let i=0;i<n;i++)for(let c=0;c<ch;c++){v.setInt16(o,Math.max(-1,Math.min(1,d[c][i]))*32767,true);o+=2}return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))};
+const renderAmb=()=>ambBusy||(ambBusy=(async()=>{const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;if(!OAC)return null;
+ const sr=22050,L=24,ctx=new OAC(2,sr*L,sr),out=ctx.createGain();out.gain.value=2;
+ const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;const dl=ctx.createDelay();dl.delayTime.value=.33;const fb=ctx.createGain();fb.gain.value=.28;
+ lp.connect(out);lp.connect(dl);dl.connect(fb);fb.connect(dl);dl.connect(out);out.connect(ctx.destination);
+ const hz=m=>440*2**((m-69)/12);
+ const chords=[[53,57,60,64],[52,55,59,62],[50,53,57,60],[48,52,55,59]];
+ chords.forEach((c,k)=>{const t0=k*6;c.forEach((m,j)=>{[0,7].forEach(det=>{const o=ctx.createOscillator(),g=ctx.createGain(),pn=ctx.createStereoPanner?ctx.createStereoPanner():null;o.type=det?'sine':'triangle';o.frequency.value=hz(m);o.detune.value=det*(j%2?1:-1);
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.028,t0+1.6);g.gain.setValueAtTime(.028,t0+4.6);g.gain.linearRampToValueAtTime(0,t0+6.4);o.connect(g);if(pn){pn.pan.value=(j-1.5)*.3;g.connect(pn);pn.connect(lp)}else g.connect(lp);o.start(t0);o.stop(Math.min(L,t0+6.5))})})});
+ const scale=[72,74,76,79,81,84];let seed=7;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+ for(let t=.6;t<L-1;t+=.75){if(rnd()<.45){const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=hz(scale[Math.floor(rnd()*scale.length)]);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.045,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+1.4);o.connect(g);g.connect(lp);o.start(t);o.stop(t+1.5)}}
+ const nb=ctx.createBuffer(1,sr*L,sr),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+ const mur=ctx.createBufferSource();mur.buffer=nb;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=420;bp.Q.value=.8;const mg=ctx.createGain();mg.gain.value=.05;mur.connect(bp);bp.connect(mg);mg.connect(out);mur.start(0);
+ const siz=ctx.createBufferSource();siz.buffer=nb;siz.playbackRate.value=1.37;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=3500;const sg=ctx.createGain();sg.gain.value=.012;siz.connect(hp);hp.connect(sg);sg.connect(out);siz.start(0);
+ [3.1,9.4,15.2,20.7].forEach(t=>{[2637,3520].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=f*(1+rnd()*.05);g.gain.setValueAtTime(0,t+i*.06);g.gain.linearRampToValueAtTime(.012,t+i*.06+.005);g.gain.exponentialRampToValueAtTime(.0001,t+i*.06+.6);o.connect(g);g.connect(out);o.start(t+i*.06);o.stop(t+i*.06+.7)})});
+ const buf=await ctx.startRendering();ambUrl=toWav(buf);return ambUrl})().catch(()=>null));
+const SIL='data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAAA=';
+const ambPlay=()=>{if(!sndOn)return;if(ambUrl){if(amb.src!==ambUrl)amb.src=ambUrl;amb.play().catch(()=>{})}else{amb.src=SIL;amb.play().catch(()=>{});renderAmb().then(u=>{if(u&&sndOn){amb.src=u;amb.play().catch(()=>{})}})}};
+(window.requestIdleCallback||(f=>setTimeout(f,1500)))(()=>renderAmb());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)amb.pause();else if(sndOn&&unlocked&&ambUrl)amb.play().catch(()=>{})});
 const players={};
-function play(kind){if(!sndOn||!unlocked)return;try{mkSnd();let a=players[kind];if(!a||!a.paused){a=new Audio(SND[kind]);players[kind]=a}a.volume=kind==='whoosh'?.35:1;a.currentTime=0;const p=a.play();p&&p.catch(()=>{})}catch(e){}}
-const unlock=()=>{if(unlocked)return;unlocked=true;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}mkSnd();};
+function play(kind){if(!sndOn||!unlocked)return;try{mkSnd();let a=players[kind];if(!a||!a.paused){a=new Audio(SND[kind]);players[kind]=a}a.volume=1;a.currentTime=0;const p=a.play();p&&p.catch(()=>{})}catch(e){}}
+const unlock=()=>{if(unlocked)return;unlocked=true;try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}mkSnd();ambPlay()};
 ['pointerdown','touchstart','keydown'].forEach(ev=>addEventListener(ev,unlock,{once:true,passive:true,capture:true}));
-sndBtn.addEventListener('click',()=>{sndOn=!sndOn;store.set('lyb-snd',sndOn);sndUI();unlock();if(sndOn)play('add')});
+sndBtn.addEventListener('click',()=>{sndOn=!sndOn;store.set('lyb-snd',sndOn);sndUI();if(!unlocked)unlock();if(sndOn){ambPlay();play('tap')}else amb.pause()});
 const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}};
 /* slideshow de platos */
 const SL=[['h-alitas-bbq','alitas-0'],['h-salchipapa-especial','salchipapas-1'],['h-broaster','broaster-0'],['h-alitas-acevichada','alitas-2'],['h-lomo-saltado','platos-0'],['h-taypa','broaster-6'],['h-alitas-bufalo','alitas-1'],['h-bistec-pobre','platos-1'],['h-tequenos','piqueos-0'],['h-combo-familiar','broaster-7'],['h-mollejitas','platos-8']];
@@ -524,7 +561,7 @@ const slides=$('#slides');slides.innerHTML=SL.map((x,i)=>`<div class="slide${i?'
 $('#dots').innerHTML=SL.map((x,i)=>`<button aria-label="Ver ${ITEMS[x[1]].n}" data-sl="${i}"${i?'':' class="on"'}></button>`).join('');
 const imgs=[...slides.children].map(d=>d.firstChild),wraps=[...slides.children],dots=[...$('#dots').children];let si=0,timer=null;
 addEventListener('load',()=>imgs.forEach(im=>{if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}}));
-const go=n=>{if(n===si)return;const prev=wraps[si];prev.classList.remove('on');prev.classList.add('out');setTimeout(()=>prev.classList.remove('out'),1400);si=(n+SL.length)%SL.length;const im=imgs[si];if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}wraps[si].classList.add('on');play('whoosh');dots.forEach((d,i)=>d.classList.toggle('on',i===si));const it=ITEMS[SL[si][1]];$('#capName').textContent=it.n;$('#capPrice').textContent=sol(it.p)};
+const go=n=>{if(n===si)return;const prev=wraps[si];prev.classList.remove('on');prev.classList.add('out');setTimeout(()=>prev.classList.remove('out'),1400);si=(n+SL.length)%SL.length;const im=imgs[si];if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}wraps[si].classList.add('on');dots.forEach((d,i)=>d.classList.toggle('on',i===si));const it=ITEMS[SL[si][1]];$('#capName').textContent=it.n;$('#capPrice').textContent=sol(it.p)};
 const auto=()=>{clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)go(si+1)},2800)};auto();
 $('#dots').addEventListener('click',e=>{const b=e.target.closest('[data-sl]');if(b){go(+b.dataset.sl);auto()}});
 $('#capAdd').addEventListener('click',()=>setQ(SL[si][1],1));
