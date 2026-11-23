@@ -191,6 +191,12 @@ footer p{color:var(--mute);margin:8px 0}
 .prog i{flex:1;height:5px;border-radius:9px;background:var(--line)}
 .prog i.on{background:var(--green)}
 .line{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.hours{display:inline-flex;align-items:center;gap:8px;margin:4px 0 8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:800;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.hours i{width:9px;height:9px;border-radius:50%;background:#7a6a60}
+.hours.open{border-color:rgba(37,211,102,.5);color:#bff3d2}.hours.open i{background:var(--green);box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:live 1.8s infinite}
+.hours.closed{border-color:#7a4a32;color:#ffcf8a}.hours.closed i{background:#ff8a3a}
+@keyframes live{70%{box-shadow:0 0 0 8px rgba(37,211,102,0)}}
+.closed{margin:12px 0 0;padding:12px 14px;border-radius:14px;background:rgba(255,138,58,.12);border:1px solid #7a4a32;color:#ffd9b0;font-size:14px}
 .again{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;min-height:52px;padding:0 16px;border-radius:16px;border:1px dashed #7a4a32;background:rgba(255,178,26,.08);color:var(--ink);font-weight:800;font-size:15px;text-align:left}
 .again svg{width:22px;height:22px;flex:none;color:var(--fire2)}.again span{flex:1}.again b{font-family:Bebas,sans-serif;font-weight:400;font-size:24px;color:var(--fire2)}
 .upt{margin:14px 0 8px;font-weight:800;font-size:15px}
@@ -261,6 +267,7 @@ footer p{color:var(--mute);margin:8px 0}
   <div class="wrap">
     <div class="h-t">
       <div class="kicker">Recién salido de las brasas</div>
+      <div class="hours" id="hours"></div>
       <h1>Pide tu <span>antojo</span></h1>
     </div>
     <div class="h-p">
@@ -320,7 +327,8 @@ footer p{color:var(--mute);margin:8px 0}
 <footer><div class="wrap">
   <div class="logo">Leña y Brasas</div>
   <p>Av. Luis Pardo 116, Villa María del Triunfo</p>
-  <p>Delivery o recojo en tienda · Pago con Yape</p>
+  <p>Atendemos todos los días de 6:00 pm a 10:00 pm</p>
+  <p>Delivery a todo San Gabriel (VMT) o recojo en tienda · Pago con Yape</p>
   <a class="wabtn" href="https://wa.me/51920164583" target="_blank" rel="noopener"><svg class="wai"><use href="#i-wa"/></svg>WhatsApp 920 164 583</a>
   <p style="font-size:12px;margin-top:18px">Fotos referenciales.</p>
 </div></footer>
@@ -337,6 +345,7 @@ footer p{color:var(--mute);margin:8px 0}
     <div id="st1">
       <div id="lines"></div>
       <div id="upsell"></div>
+      <p class="closed" id="closedMsg" hidden></p>
       <div class="tot"><span>Subtotal</span><span id="total">S/ 0</span></div>
       <p class="note">El delivery se cobra aparte según tu zona; te lo confirmamos por WhatsApp.</p>
       <button class="next" id="go2">Continuar</button>
@@ -348,6 +357,7 @@ footer p{color:var(--mute);margin:8px 0}
       <div id="dirWrap">
         <button type="button" class="gps" id="gpsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg><span id="gpsTxt">Usar mi ubicación actual</span></button>
         <p class="gpsst" id="gpsSt">Recomendado: el repartidor llega directo a tu puerta.</p>
+        <p class="note" style="margin:8px 0 0">Hacemos delivery a todo <b>San Gabriel, Villa María del Triunfo</b>. Si estás fuera de esa zona, elige «Recojo en tienda».</p>
         <label>Dirección (calle y número)<input id="dir" autocomplete="street-address" placeholder="Ej. Jr. Los Pinos 230"></label>
         <label>Referencia<input id="ref" placeholder="Ej. frente al parque, puerta verde"></label>
       </div>
@@ -519,7 +529,12 @@ const render=()=>{
  $('#wa').href=waLink();$('#waAgain').href=waLink();$('#wa').setAttribute('aria-disabled',$('#paid').checked?'false':'true');
 };
 const show=s=>{step=s;[1,2,3,4].forEach(i=>$('#st'+i).hidden=i!==s);document.querySelectorAll('#prog i').forEach((el,i)=>el.classList.toggle('on',i<s));$('#prog').hidden=s===4;$('#stTitle').textContent=['','Mi pedido','Tus datos','Pago',''][s];$('.panel').scrollTop=0;render()};
-$('#go2').addEventListener('click',()=>{if(totals().n)show(2)});
+const limaMin=()=>{const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Lima',hour:'numeric',minute:'numeric',hourCycle:'h23'}).formatToParts(new Date()).map(x=>[x.type,x.value]));return (+p.hour)*60+(+p.minute)};
+const OPEN=18*60,CLOSE=22*60;const isOpen=()=>{const m=limaMin();return m>=OPEN&&m<CLOSE};
+const closedText=()=>limaMin()<OPEN?'Estamos cerrados. Abrimos hoy a las 6:00 pm':'Ya cerramos por hoy. Abrimos mañana a las 6:00 pm';
+const hoursUI=()=>{const o=isOpen(),el=$('#hours');el.className='hours '+(o?'open':'closed');el.innerHTML=`<i></i>${o?'Abierto ahora · hasta las 10:00 pm':closedText()}`;const c=$('#closedMsg');c.hidden=o;if(!o)c.textContent=closedText()+'. Atendemos todos los días de 6:00 pm a 10:00 pm. Tu pedido queda guardado en tu celular.'};
+hoursUI();setInterval(hoursUI,30000);
+$('#go2').addEventListener('click',()=>{if(!isOpen()){hoursUI();toast(closedText());return}if(totals().n)show(2)});
 $('#go3').addEventListener('click',()=>{const nom=$('#nombre'),dir=$('#dir');let ok=true;
  [nom,...(mode==='Delivery'&&!loc?[dir]:[])].forEach(el=>{const b=!el.value.trim();el.classList.toggle('bad',b);if(b)ok=false});
  const miss=[!nom.value.trim()&&'tu nombre',mode==='Delivery'&&!loc&&!dir.value.trim()&&'tu dirección (o toca «Usar mi ubicación actual»)'].filter(Boolean);$('#err2').textContent=ok?'':'Falta '+miss.join(' y ')+'.';
@@ -533,7 +548,7 @@ $('#paid').addEventListener('change',()=>{play($('#paid').checked?'add':'tap');r
 const copy=async()=>{try{await navigator.clipboard.writeText(YAPE);toast('Número copiado: '+YAPE)}catch(e){toast('Yape: 920 164 583')}};
 $('#again').addEventListener('click',()=>{const last=store.get('lyb-last',{});cart={};Object.keys(last).forEach(k=>{if(ITEMS[k])cart[k]=last[k]});store.set('lyb-cart2',cart);play('add');render();open()});
 $('#copyYape').addEventListener('click',copy);$('#copyYape2').addEventListener('click',copy);
-$('#wa').addEventListener('click',e=>{if($('#paid').checked)store.set('lyb-last',{...cart});if(!$('#paid').checked){e.preventDefault();toast('Primero yapea y marca «Ya yapeé»');$('.chk').animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300});return}play('send');$('#doneTxt').textContent=`Tu pedido #${code} se abrió en WhatsApp. Envía el mensaje y adjunta tu captura.`;$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
+$('#wa').addEventListener('click',e=>{if(!isOpen()){e.preventDefault();toast(closedText());return}if($('#paid').checked)store.set('lyb-last',{...cart});if(!$('#paid').checked){e.preventDefault();toast('Primero yapea y marca «Ya yapeé»');$('.chk').animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300});return}play('send');$('#doneTxt').textContent=`Tu pedido #${code} se abrió en WhatsApp. Envía el mensaje y adjunta tu captura.`;$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
 $('#newOrder').addEventListener('click',()=>{cart={};$('#paid').checked=false;store.set('lyb-cart2',cart);newCode();close()});
 const open=()=>{$('#sheet').classList.add('open');document.body.style.overflow='hidden';show(step===4?1:step)},close=()=>{$('#sheet').classList.remove('open');document.body.style.overflow='';if(step===4)step=1;render()};
 $('#openCart').addEventListener('click',open);$('#barBtn').addEventListener('click',open);$('#closeCart').addEventListener('click',close);$('#sheetBg').addEventListener('click',close);
