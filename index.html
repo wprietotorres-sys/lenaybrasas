@@ -43,7 +43,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cartbtn{display:flex;align-items:center;gap:8px;background:var(--green);color:var(--gdark);border:0;border-radius:999px;padding:8px 14px;font-weight:800;min-height:44px;font-size:15px}
 .cartbtn b{background:var(--gdark);color:#fff;border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:13px}
 /* hero */
-.hero{position:relative;overflow:hidden;isolation:isolate;padding:22px 0 40px;background:radial-gradient(120% 70% at 50% 110%,#ff5a0a 0%,#a8300a 22%,#3a160a 48%,var(--bg) 72%)}
+.hero{position:relative;overflow:hidden;isolation:isolate;padding:18px 0 18px;background:radial-gradient(120% 70% at 50% 110%,#ff5a0a 0%,#a8300a 22%,#3a160a 48%,var(--bg) 72%)}
 #embers{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
 .hero .wrap{display:grid;gap:14px;align-items:center;grid-template-areas:"t" "p" "r"}
 .h-t{grid-area:t}.h-p{grid-area:p}.h-r{grid-area:r}
@@ -129,7 +129,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .tabs .wrap::-webkit-scrollbar{display:none}
 .tabs a{flex:none;padding:8px 15px;border-radius:999px;border:1px solid var(--line);color:var(--mute);text-decoration:none;font-weight:600;font-size:14px;min-height:40px;display:flex;align-items:center}
 .tabs a.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.cat{padding:30px 0 6px}
+.cat{padding:22px 0 6px}
 .cat-head{margin-bottom:12px}
 .cat-head p{margin:2px 0 0;color:var(--mute);font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -252,10 +252,12 @@ footer p{color:var(--mute);margin:8px 0}
     <div class="h-r">
       <ol class="steps"><li><b>1</b> Elige tus platos</li><li><b>2</b> Envía por WhatsApp</li><li><b>3</b> Paga con Yape</li></ol>
       <div class="today" id="today"></div>
-      <div class="ctas"><a class="cta" href="#carta">Ver la carta</a><a class="cta ghost" href="#promos">Promos de la semana</a></div>
     </div>
   </div>
 </section>
+
+<nav class="tabs" aria-label="Categorías"><div class="wrap" id="tabs"></div></nav>
+<main class="wrap" id="carta"></main>
 
 <section class="band" id="promos"><div class="wrap">
   <h2 class="sec-t"><small>Cada día tiene su antojo</small>Promos de la semana</h2>
@@ -290,9 +292,6 @@ footer p{color:var(--mute);margin:8px 0}
   <div class="stage" id="stage"><div class="ring" id="ring"></div></div>
   <p class="hint">Desliza para girar · toca una categoría para verla</p>
 </div></section>
-
-<nav class="tabs" aria-label="Categorías"><div class="wrap" id="tabs"></div></nav>
-<main class="wrap" id="carta"></main>
 
 <footer><div class="wrap">
   <div class="logo">Leña y Brasas</div>
