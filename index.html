@@ -191,6 +191,13 @@ footer p{color:var(--mute);margin:8px 0}
 .prog i{flex:1;height:5px;border-radius:9px;background:var(--line)}
 .prog i.on{background:var(--green)}
 .line{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.again{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;min-height:52px;padding:0 16px;border-radius:16px;border:1px dashed #7a4a32;background:rgba(255,178,26,.08);color:var(--ink);font-weight:800;font-size:15px;text-align:left}
+.again svg{width:22px;height:22px;flex:none;color:var(--fire2)}.again span{flex:1}.again b{font-family:Bebas,sans-serif;font-weight:400;font-size:24px;color:var(--fire2)}
+.upt{margin:14px 0 8px;font-weight:800;font-size:15px}
+.ups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ups button{display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:0 0 8px;border-radius:14px;border:1px solid var(--line);background:var(--card);overflow:hidden;text-align:left;font-size:12px;font-weight:700;line-height:1.25}
+.ups img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.ups span{padding:0 8px}.ups b{padding:0 8px;color:var(--fire2);font-family:Bebas,sans-serif;font-weight:400;font-size:19px}
 .line img{width:52px;height:52px;border-radius:12px;object-fit:cover}
 .line small{display:block;color:var(--mute)}
 .qty{display:flex;align-items:center;gap:6px;margin-top:4px}
@@ -268,6 +275,7 @@ footer p{color:var(--mute);margin:8px 0}
     <div class="h-r">
       <ol class="steps"><li><b>1</b> Elige tus platos</li><li><b>2</b> Envía por WhatsApp</li><li><b>3</b> Paga con Yape</li></ol>
       <div class="today" id="today"></div>
+      <button class="again" id="again" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span>Repetir mi último pedido</span><b id="againTot"></b></button>
     </div>
   </div>
 </section>
@@ -328,6 +336,7 @@ footer p{color:var(--mute);margin:8px 0}
 
     <div id="st1">
       <div id="lines"></div>
+      <div id="upsell"></div>
       <div class="tot"><span>Subtotal</span><span id="total">S/ 0</span></div>
       <p class="note">El delivery se cobra aparte según tu zona; te lo confirmamos por WhatsApp.</p>
       <button class="next" id="go2">Continuar</button>
@@ -503,6 +512,9 @@ const render=()=>{
  $('#total').textContent=sol(s);$('#total3').textContent=sol(s);$('#doneTot').textContent=sol(s);$('#yAmt').textContent=sol(s);$('#paidAmt').textContent=sol(s);$('#delPayNote').hidden=mode!=='Delivery';
  $('#delNote').hidden=mode!=='Delivery';
  $('#lines').innerHTML=n?Object.keys(cart).map(k=>{const i=info(k);return `<div class="line"><img src="${i.img}" alt=""><div>${i.n}<small>${sol(i.p)} c/u</small><div class="qty"><button data-q="${k}" data-d="-1" aria-label="Quitar uno">−</button><b>${cart[k]}</b><button data-q="${k}" data-d="1" aria-label="Agregar uno">+</button></div></div><b style="white-space:nowrap">${sol(i.p*cart[k])}</b></div>`}).join(''):'<p class="empty">Tu pedido está vacío. Toca «+ Agregar» en cualquier plato.</p>';
+ const ks=Object.keys(cart),sug=[];if(n){if(!ks.some(k=>k.startsWith('bebidas-')))sug.push('bebidas-3','bebidas-1');if(!ks.some(k=>k.startsWith('piqueos-')))sug.push('piqueos-1')}
+ $('#upsell').innerHTML=sug.length?`<p class="upt">¿Lo acompañas con algo?</p><div class="ups">${sug.map(k=>`<button data-q="${k}" data-d="1"><img src="${ITEMS[k].img}" alt="" loading="lazy"><span>${ITEMS[k].n}</span><b>+ ${sol(ITEMS[k].p)}</b></button>`).join('')}</div>`:'';
+ const last=store.get('lyb-last',null),lk=last?Object.keys(last).filter(k=>ITEMS[k]):[];$('#again').hidden=!(lk.length&&!n);if(lk.length)$('#againTot').textContent=sol(lk.reduce((a,k)=>a+ITEMS[k].p*last[k],0));
  $('#go2').disabled=!n;$('#go2').style.opacity=n?1:.45;
  $('#wa').href=waLink();$('#waAgain').href=waLink();$('#wa').setAttribute('aria-disabled',$('#paid').checked?'false':'true');
 };
@@ -519,8 +531,9 @@ const setMode=m=>{mode=m;document.querySelectorAll('#mode button,#mode3 button')
 ['#nombre','#dir','#ref','#nota'].forEach(s=>$(s).addEventListener('input',()=>{$(s).classList.remove('bad');render()}));
 $('#paid').addEventListener('change',()=>{play($('#paid').checked?'add':'tap');render()});
 const copy=async()=>{try{await navigator.clipboard.writeText(YAPE);toast('Número copiado: '+YAPE)}catch(e){toast('Yape: 920 164 583')}};
+$('#again').addEventListener('click',()=>{const last=store.get('lyb-last',{});cart={};Object.keys(last).forEach(k=>{if(ITEMS[k])cart[k]=last[k]});store.set('lyb-cart2',cart);play('add');render();open()});
 $('#copyYape').addEventListener('click',copy);$('#copyYape2').addEventListener('click',copy);
-$('#wa').addEventListener('click',e=>{if(!$('#paid').checked){e.preventDefault();toast('Primero yapea y marca «Ya yapeé»');$('.chk').animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300});return}play('send');$('#doneTxt').textContent=`Tu pedido #${code} se abrió en WhatsApp. Envía el mensaje y adjunta tu captura.`;$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
+$('#wa').addEventListener('click',e=>{if($('#paid').checked)store.set('lyb-last',{...cart});if(!$('#paid').checked){e.preventDefault();toast('Primero yapea y marca «Ya yapeé»');$('.chk').animate([{transform:'translateX(0)'},{transform:'translateX(-8px)'},{transform:'translateX(8px)'},{transform:'translateX(0)'}],{duration:300});return}play('send');$('#doneTxt').textContent=`Tu pedido #${code} se abrió en WhatsApp. Envía el mensaje y adjunta tu captura.`;$('#locHelp').hidden=!(mode==='Delivery'&&!loc);setTimeout(()=>show(4),400)});
 $('#newOrder').addEventListener('click',()=>{cart={};$('#paid').checked=false;store.set('lyb-cart2',cart);newCode();close()});
 const open=()=>{$('#sheet').classList.add('open');document.body.style.overflow='hidden';show(step===4?1:step)},close=()=>{$('#sheet').classList.remove('open');document.body.style.overflow='';if(step===4)step=1;render()};
 $('#openCart').addEventListener('click',open);$('#barBtn').addEventListener('click',open);$('#closeCart').addEventListener('click',close);$('#sheetBg').addEventListener('click',close);
