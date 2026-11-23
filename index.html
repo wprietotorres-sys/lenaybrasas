@@ -10,6 +10,9 @@
 <meta property="og:image" content="https://wprietotorres-sys.github.io/lenaybrasas/img/og.jpg">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#140b07">
+<link rel="preload" as="image" href="img/s-alitas-bbq.webp" fetchpriority="high">
+<link rel="preload" as="font" type="font/woff2" href="lib/fonts/bebas-neue-latin-400-normal.woff2" crossorigin>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2230%22 fill=%22%23140b07%22/%3E%3Cpath d=%22M32 10c4 10 14 14 14 26a14 14 0 0 1-28 0c0-7 4-10 6-15 1 5 4 7 6 7-2-6 0-12 2-18z%22 fill=%22%23ff6a1a%22/%3E%3C/svg%3E">
 <style>
 /* VOICE: cálido, callejero, con hambre — una parrilla de barrio que se luce
    IDEA: una carta que arde y se pide sola: fotos grandes, un toque para agregar, WhatsApp y Yape al final
@@ -23,6 +26,7 @@
 @font-face{font-family:Manrope;font-weight:800;src:url(lib/fonts/manrope-latin-800-normal.woff2) format('woff2');font-display:swap}
 :root{color-scheme:dark;--bg:#140b07;--bg2:#1f120c;--card:#26160e;--line:#3a2418;--ink:#fdf1e6;--mute:#d8bfae;--fire:#ff6a1a;--fire2:#ffb21a;--wood:#8d4b3b;--green:#25d366;--gdark:#052e16;--yape:#742284}
 *{box-sizing:border-box;min-width:0}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth;scroll-padding-top:118px}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Manrope,system-ui,sans-serif;overflow-x:clip;-webkit-tap-highlight-color:transparent}
 h1,h2,h3{font-family:Bebas,Impact,sans-serif;font-weight:400;letter-spacing:.02em;line-height:1.02;margin:0}
@@ -33,12 +37,15 @@ button{font:inherit;color:inherit;cursor:pointer}
 .top{position:sticky;top:0;z-index:30;background:rgba(20,11,7,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;height:58px;gap:10px}
 .logo{font-family:Yellowtail,cursive;font-size:29px;line-height:1;color:var(--ink);text-decoration:none;text-shadow:0 0 18px rgba(255,106,26,.55)}
+.snd{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;margin-left:auto}
+.snd svg{width:20px;height:20px}
 .cartbtn{display:flex;align-items:center;gap:8px;background:var(--green);color:var(--gdark);border:0;border-radius:999px;padding:8px 14px;font-weight:800;min-height:44px;font-size:15px}
 .cartbtn b{background:var(--gdark);color:#fff;border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:13px}
 /* hero */
 .hero{position:relative;overflow:hidden;isolation:isolate;padding:22px 0 40px;background:radial-gradient(120% 70% at 50% 110%,#ff5a0a 0%,#a8300a 22%,#3a160a 48%,var(--bg) 72%)}
 #embers{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
-.hero .wrap{display:grid;gap:18px;align-items:center}
+.hero .wrap{display:grid;gap:14px;align-items:center;grid-template-areas:"t" "p" "r"}
+.h-t{grid-area:t}.h-p{grid-area:p}.h-r{grid-area:r}
 .kicker{font-family:Yellowtail,cursive;font-size:25px;color:var(--fire2)}
 .hero h1{font-size:clamp(58px,15vw,118px);text-shadow:0 4px 0 #5a2412,0 0 40px rgba(255,120,30,.45)}
 .hero h1 span{color:var(--fire2)}
@@ -46,10 +53,19 @@ button{font:inherit;color:inherit;cursor:pointer}
 .steps{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding:0;list-style:none;font-size:13px;font-weight:600}
 .steps li{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
 .steps b{color:var(--fire2)}
-.plate{position:relative;width:min(76vw,400px);aspect-ratio:1;margin:0 auto;perspective:900px}
+.plate{position:relative;width:min(70vw,380px);aspect-ratio:1;margin:0 auto;perspective:900px}
 .plate .disc{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7ee,#e9d6c5 60%,#bfa28c);box-shadow:0 40px 60px rgba(0,0,0,.6),0 0 90px rgba(255,110,20,.45);animation:float 6s ease-in-out infinite;display:grid;place-items:center}
-.plate img{width:86%;aspect-ratio:1;object-fit:cover;border-radius:50%;box-shadow:inset 0 0 0 4px #fff,0 6px 18px rgba(0,0,0,.35)}
-.plate .tag{position:absolute;right:-3%;top:5%;transform:rotate(10deg);background:var(--fire);color:#1a0b04;border-radius:18px;padding:9px 13px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);font-weight:800;font-size:13px;line-height:1.1}
+.slides{position:relative;width:86%;aspect-ratio:1;border-radius:50%;overflow:hidden;box-shadow:0 0 0 4px #fff,0 6px 18px rgba(0,0,0,.35);background:#2a170e}
+.slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:rotate(-35deg) scale(1.2);transition:opacity .7s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.slides img.on{opacity:1;transform:none}
+.slides img.out{opacity:0;transform:rotate(35deg) scale(1.1)}
+.cap{display:flex;align-items:center;gap:10px;justify-content:center;margin:14px auto 0;max-width:380px;background:rgba(20,11,7,.75);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 16px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.cap span{flex:1;font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .3s}
+.cap b{font-family:Bebas,sans-serif;font-weight:400;font-size:24px;color:var(--fire2);white-space:nowrap}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.dots button{width:8px;height:8px;border-radius:9px;border:0;padding:0;background:#5a3424;transition:width .3s,background .3s}
+.dots button.on{width:22px;background:var(--fire)}
+.plate .tag{position:absolute;right:-6%;top:2%;transform:rotate(10deg);background:var(--fire);color:#1a0b04;border-radius:18px;padding:9px 13px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5);font-weight:800;font-size:13px;line-height:1.1}
 .plate .tag strong{display:block;font-family:Bebas,sans-serif;font-weight:400;font-size:38px;line-height:.95}
 .steam{position:absolute;left:50%;top:-8%;width:60%;height:40%;transform:translateX(-50%);pointer-events:none}
 .steam i{position:absolute;bottom:0;width:14px;height:60px;border-radius:50%;background:rgba(255,255,255,.16);filter:blur(6px);animation:steam 3.6s ease-in infinite}
@@ -183,7 +199,7 @@ footer p{color:var(--mute);margin:8px 0}
 .toast{position:fixed;left:50%;top:72px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;border-radius:999px;padding:10px 18px;z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1}
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(min-width:860px){.hero .wrap{grid-template-columns:1.05fr .95fr}.promos{grid-template-columns:1fr 1fr}.stage{height:370px}}
+@media(min-width:860px){.hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"t p" "r p"}.promos{grid-template-columns:1fr 1fr}.stage{height:370px}}
 @media(min-width:1060px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:430px){.promo{grid-template-columns:1fr}.promo .ph{min-height:200px;order:-1}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
@@ -194,23 +210,30 @@ footer p{color:var(--mute);margin:8px 0}
 
 <header class="top"><div class="wrap">
   <a class="logo" href="#inicio">Leña y Brasas</a>
+  <button class="snd" id="snd" aria-label="Sonido activado" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path id="sndw" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a9 9 0 0 1 0 12"/></svg></button>
   <button class="cartbtn" id="openCart" aria-label="Ver mi pedido"><svg class="wai"><use href="#i-wa"/></svg>Pedir <b id="count">0</b></button>
 </div></header>
 
 <section class="hero" id="inicio">
   <canvas id="embers" aria-hidden="true"></canvas>
   <div class="wrap">
-    <div>
+    <div class="h-t">
       <div class="kicker">Recién salido de las brasas</div>
       <h1>Pide tu <span>antojo</span></h1>
+    </div>
+    <div class="h-p">
+      <div class="plate">
+        <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="disc"><div class="slides" id="slides" aria-live="polite"></div></div>
+        <div class="tag" id="heroTag"></div>
+      </div>
+      <div class="cap"><span id="capName">Alitas BBQ</span><b id="capPrice">S/ 17</b><button class="add" id="capAdd">+ Agregar</button></div>
+      <div class="dots" id="dots" aria-label="Elegir plato"></div>
+    </div>
+    <div class="h-r">
       <ol class="steps"><li><b>1</b> Elige tus platos</li><li><b>2</b> Envía por WhatsApp</li><li><b>3</b> Paga con Yape</li></ol>
       <div class="today" id="today"></div>
       <div class="ctas"><a class="cta" href="#carta">Ver la carta</a><a class="cta ghost" href="#promos">Promos de la semana</a></div>
-    </div>
-    <div class="plate">
-      <div class="steam" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="disc"><img src="img/hero.jpg" alt="Alitas BBQ con papas andinas"></div>
-      <div class="tag" id="heroTag"></div>
     </div>
   </div>
 </section>
@@ -228,7 +251,7 @@ footer p{color:var(--mute);margin:8px 0}
         <div class="pick" id="pickAlitas"></div>
         <button class="cta" data-promo="alitas">Agregar promo</button>
       </div>
-      <div class="ph"><div class="quad"><img src="img/alitas-bbq.jpg" alt="Alitas BBQ"><img src="img/alitas-bufalo.jpg" alt="Alitas búfalo"><img src="img/alitas-acevichada.jpg" alt="Alitas acevichadas"><img src="img/alitas-crispy.jpg" alt="Alitas crispy"></div></div>
+      <div class="ph"><div class="quad"><img loading="lazy" decoding="async" src="img/alitas-bbq.webp" alt="Alitas BBQ"><img loading="lazy" decoding="async" src="img/alitas-bufalo.webp" alt="Alitas búfalo"><img loading="lazy" decoding="async" src="img/alitas-acevichada.webp" alt="Alitas acevichadas"><img loading="lazy" decoding="async" src="img/alitas-crispy.webp" alt="Alitas crispy"></div></div>
     </article>
     <article class="promo alt">
       <div class="tx">
@@ -238,7 +261,7 @@ footer p{color:var(--mute);margin:8px 0}
         <p>Presa de pollo broaster + papas + cremas + ensalada.</p>
         <button class="cta" data-promo="broaster">Agregar promo</button>
       </div>
-      <div class="ph"><img src="img/broaster.jpg" alt="Plato de pollo broaster con papas y ensalada"></div>
+      <div class="ph"><img loading="lazy" decoding="async" src="img/broaster.webp" alt="Plato de pollo broaster con papas y ensalada"></div>
     </article>
   </div>
 </div></section>
@@ -323,40 +346,40 @@ const dow=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(lima);
 const isAlitas=dow===2||dow===4,isBroaster=dow===1||dow===3;
 const P='img/';
 const CATS=[
- {id:'alitas',name:'Alitas',sub:'6 alitas + papas andinas + cremas',img:'alitas-bbq.jpg',items:[
-  ['Alitas BBQ','6 alitas en salsa BBQ + papas andinas + cremas',17,'alitas-bbq.jpg'],
-  ['Alitas búfalo','6 alitas en salsa búfalo + papas andinas + cremas',17,'alitas-bufalo.jpg'],
-  ['Alitas acevichadas','6 alitas en salsa acevichada + papas andinas + cremas',18,'alitas-acevichada.jpg'],
-  ['Alitas crispy','6 alitas crocantes + papas andinas + cremas',15,'alitas-crispy.jpg']]},
- {id:'broaster',name:'Broaster',sub:'Crocante por fuera, jugoso por dentro',img:'broaster.jpg',items:[
-  ['Broaster pecho','Presa de pollo + papas + cremas + ensalada',12,'broaster.jpg'],
-  ['Broaster encuentro','Presa de pollo + papas + cremas + ensalada',12,'broaster.jpg'],
-  ['Broaster pierna','Presa de pollo + papas + cremas + ensalada',10,'broaster.jpg'],
-  ['Broaster alita','Presa de pollo + papas + cremas + ensalada',9,'broaster.jpg'],
-  ['Mostribroaster','Presa de pollo + papas + chaufa + cremas + ensalada',14,'mostribroaster.jpg'],
-  ['Salchibroaster','Presa de pollo + hot dog ahumado + papas + ensalada',13,'salchibroaster.jpg'],
-  ['Taypá','Presa de pollo + hot dog ahumado + chaufa + papas + ensalada',15,'taypa.jpg'],
-  ['Combo familiar','6 presas de pollo + papas + ensalada + cremas',48,'combo-familiar.jpg','Para compartir']]},
- {id:'salchipapas',name:'Salchipapas',sub:'El clásico que nunca falla',img:'salchipapa-especial.jpg',items:[
-  ['Salchipapa clásica','Hot dog ahumado + papas + cremas',9,'salchipapa-clasica.jpg'],
-  ['Salchipapa especial','Hot dog ahumado + chorizo + huevo + papas andinas + cremas',13,'salchipapa-especial.jpg']]},
- {id:'platos',name:'Platos a la carta',sub:'Al wok y a la plancha, como en casa',img:'lomo-saltado.jpg',items:[
-  ['Lomo saltado','Carne salteada al wok con cebolla y tomate, papas y arroz',18,'lomo-saltado.jpg'],
-  ['Bistec a lo pobre','Bistec suave + plátano frito + huevo + papas + arroz',20,'bistec-pobre.jpg'],
-  ['Pollo a la plancha','Filete de pollo + arroz + papas + ensalada',16,'pollo-plancha.jpg'],
-  ['Pollo saltado','Pollo salteado al wok con cebolla y tomate, papas y arroz',16,'pollo-saltado.jpg'],
-  ['Tallarín saltado de carne','Tallarines salteados al wok con carne',18,'tallarin.jpg'],
-  ['Tallarín saltado de pollo','Tallarines salteados al wok con pollo',16,'tallarin.jpg'],
-  ['Chaufa de carne','Arroz chaufa al wok con carne',15,'chaufa.jpg'],
-  ['Chaufa de pollo','Arroz chaufa al wok con pollo',13,'chaufa.jpg'],
-  ['Mollejitas','Mollejitas anticucheras + papas + ensalada',12,'mollejitas.jpg']]},
- {id:'piqueos',name:'Piqueos',sub:'Para picar mientras llega lo bueno',img:'tequenos.jpg',items:[
-  ['Tequeños 12 und.','Rellenos de queso, con guacamole',12,'tequenos.jpg'],
-  ['Tequeños 6 und.','Rellenos de queso, con salsa de la casa',7,'tequenos.jpg']]},
- {id:'bebidas',name:'Bebidas',sub:'Bien heladas',img:'limonada.jpg',items:[
-  ['Limonada americana','Jarra',13,'limonada.jpg'],['½ limonada','Media jarra',7,'limonada.jpg'],
-  ['Inca Kola o Coca-Cola 1.5 L','Elige el sabor en la nota',8,'gaseosas.jpg'],['Inca Kola o Coca-Cola 1 L','Elige el sabor en la nota',6,'gaseosas.jpg'],
-  ['Inca Kola o Coca-Cola ½ L','Elige el sabor en la nota',4,'gaseosas.jpg'],['Gordita Inca Kola','Botella personal',4,'gaseosas.jpg'],['Jumbo Coca-Cola','Botella personal',4,'gaseosas.jpg']]}
+ {id:'alitas',name:'Alitas',sub:'6 alitas + papas andinas + cremas',img:'alitas-bbq.webp',items:[
+  ['Alitas BBQ','6 alitas en salsa BBQ + papas andinas + cremas',17,'alitas-bbq.webp'],
+  ['Alitas búfalo','6 alitas en salsa búfalo + papas andinas + cremas',17,'alitas-bufalo.webp'],
+  ['Alitas acevichadas','6 alitas en salsa acevichada + papas andinas + cremas',18,'alitas-acevichada.webp'],
+  ['Alitas crispy','6 alitas crocantes + papas andinas + cremas',15,'alitas-crispy.webp']]},
+ {id:'broaster',name:'Broaster',sub:'Crocante por fuera, jugoso por dentro',img:'broaster.webp',items:[
+  ['Broaster pecho','Presa de pollo + papas + cremas + ensalada',12,'broaster.webp'],
+  ['Broaster encuentro','Presa de pollo + papas + cremas + ensalada',12,'broaster.webp'],
+  ['Broaster pierna','Presa de pollo + papas + cremas + ensalada',10,'broaster.webp'],
+  ['Broaster alita','Presa de pollo + papas + cremas + ensalada',9,'broaster.webp'],
+  ['Mostribroaster','Presa de pollo + papas + chaufa + cremas + ensalada',14,'mostribroaster.webp'],
+  ['Salchibroaster','Presa de pollo + hot dog ahumado + papas + ensalada',13,'salchibroaster.webp'],
+  ['Taypá','Presa de pollo + hot dog ahumado + chaufa + papas + ensalada',15,'taypa.webp'],
+  ['Combo familiar','6 presas de pollo + papas + ensalada + cremas',48,'combo-familiar.webp','Para compartir']]},
+ {id:'salchipapas',name:'Salchipapas',sub:'El clásico que nunca falla',img:'salchipapa-especial.webp',items:[
+  ['Salchipapa clásica','Hot dog ahumado + papas + cremas',9,'salchipapa-clasica.webp'],
+  ['Salchipapa especial','Hot dog ahumado + chorizo + huevo + papas andinas + cremas',13,'salchipapa-especial.webp']]},
+ {id:'platos',name:'Platos a la carta',sub:'Al wok y a la plancha, como en casa',img:'lomo-saltado.webp',items:[
+  ['Lomo saltado','Carne salteada al wok con cebolla y tomate, papas y arroz',18,'lomo-saltado.webp'],
+  ['Bistec a lo pobre','Bistec suave + plátano frito + huevo + papas + arroz',20,'bistec-pobre.webp'],
+  ['Pollo a la plancha','Filete de pollo + arroz + papas + ensalada',16,'pollo-plancha.webp'],
+  ['Pollo saltado','Pollo salteado al wok con cebolla y tomate, papas y arroz',16,'pollo-saltado.webp'],
+  ['Tallarín saltado de carne','Tallarines salteados al wok con carne',18,'tallarin.webp'],
+  ['Tallarín saltado de pollo','Tallarines salteados al wok con pollo',16,'tallarin.webp'],
+  ['Chaufa de carne','Arroz chaufa al wok con carne',15,'chaufa.webp'],
+  ['Chaufa de pollo','Arroz chaufa al wok con pollo',13,'chaufa.webp'],
+  ['Mollejitas','Mollejitas anticucheras + papas + ensalada',12,'mollejitas.webp']]},
+ {id:'piqueos',name:'Piqueos',sub:'Para picar mientras llega lo bueno',img:'tequenos.webp',items:[
+  ['Tequeños 12 und.','Rellenos de queso, con guacamole',12,'tequenos.webp'],
+  ['Tequeños 6 und.','Rellenos de queso, con salsa de la casa',7,'tequenos.webp']]},
+ {id:'bebidas',name:'Bebidas',sub:'Bien heladas',img:'limonada.webp',items:[
+  ['Limonada americana','Jarra',13,'limonada.webp'],['½ limonada','Media jarra',7,'limonada.webp'],
+  ['Inca Kola o Coca-Cola 1.5 L','Elige el sabor en la nota',8,'gaseosas.webp'],['Inca Kola o Coca-Cola 1 L','Elige el sabor en la nota',6,'gaseosas.webp'],
+  ['Inca Kola o Coca-Cola ½ L','Elige el sabor en la nota',4,'gaseosas.webp'],['Gordita Inca Kola','Botella personal',4,'gaseosas.webp'],['Jumbo Coca-Cola','Botella personal',4,'gaseosas.webp']]}
 ];
 const ITEMS={};CATS.forEach(c=>c.items.forEach((it,j)=>ITEMS[c.id+'-'+j]={n:it[0],d:it[1],p:it[2],img:P+it[3],tag:it[4]}));
 const $=s=>document.querySelector(s);
@@ -371,7 +394,7 @@ const W=[[1,'Lun','Broaster','S/ 11'],[2,'Mar','Alitas','S/ 15'],[3,'Mié','Broa
 $('#week').innerHTML=W.map(([d,n,w,p])=>`<div class="day${d===dow?' on':''}"><span class="d">${n}</span><span class="w">${w}</span><span class="p">${p}</span></div>`).join('');
 /* ring */
 const ring=$('#ring'),N=CATS.length;
-ring.innerHTML=CATS.map((c,i)=>`<button class="face" data-go="${c.id}" style="transform:rotateY(${i*360/N}deg) translateZ(var(--r))"><img src="${P+c.img}" alt=""><b>${c.name}</b><span>desde ${sol(Math.min(...c.items.map(x=>x[2])))}</span></button>`).join('');
+ring.innerHTML=CATS.map((c,i)=>`<button class="face" data-go="${c.id}" style="transform:rotateY(${i*360/N}deg) translateZ(var(--r))"><img src="${P+c.img}" alt="" loading="lazy" decoding="async"><b>${c.name}</b><span>desde ${sol(Math.min(...c.items.map(x=>x[2])))}</span></button>`).join('');
 let ang=0,vel=0,drag=false,lastX=0,moved=0;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const R=()=>ring.style.setProperty('--r',Math.round(ring.offsetWidth/2/Math.tan(Math.PI/N))+26+'px');R();addEventListener('resize',R);
@@ -384,7 +407,7 @@ ring.addEventListener('keydown',e=>{const b=e.target.closest('[data-go]');if(b&&
 const spin=()=>{if(!drag){vel*=.95;ang+=vel+(reduce?0:.12)}ring.style.transform=`translateZ(calc(var(--r) * -1)) rotateX(-6deg) rotateY(${ang}deg)`;requestAnimationFrame(spin)};spin();
 /* menu */
 $('#tabs').innerHTML=CATS.map(c=>`<a href="#${c.id}" data-tab="${c.id}">${c.name}</a>`).join('');
-$('#carta').innerHTML=CATS.map(c=>`<section class="cat" id="${c.id}"><div class="cat-head"><h2 class="sec-t">${c.name}</h2><p>${c.sub}</p></div><div class="grid">${c.items.map((it,j)=>{const k=c.id+'-'+j;return `<article class="card"><div class="ph"><img src="${P+it[3]}" alt="${it[0]}" loading="lazy">${it[4]?`<span class="badge">${it[4]}</span>`:''}</div><div class="bd"><h3>${it[0]}</h3><p>${it[1]}</p><div class="row"><span class="pr">${sol(it[2])}</span><span data-ctl="${k}"></span></div></div></article>`}).join('')}</div></section>`).join('');
+$('#carta').innerHTML=CATS.map(c=>`<section class="cat" id="${c.id}"><div class="cat-head"><h2 class="sec-t">${c.name}</h2><p>${c.sub}</p></div><div class="grid">${c.items.map((it,j)=>{const k=c.id+'-'+j;return `<article class="card"><div class="ph"><img src="${P+it[3]}" alt="${it[0]}" loading="lazy" decoding="async" width="560" height="420">${it[4]?`<span class="badge">${it[4]}</span>`:''}</div><div class="bd"><h3>${it[0]}</h3><p>${it[1]}</p><div class="row"><span class="pr">${sol(it[2])}</span><span data-ctl="${k}"></span></div></div></article>`}).join('')}</div></section>`).join('');
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.card').forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+'ms';io.observe(el)});
 const tabIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.tab===e.target.id));const a=document.querySelector(`.tabs a[data-tab="${e.target.id}"]`);a&&a.parentNode.scrollTo({left:a.offsetLeft-20,behavior:'smooth'})}}),{rootMargin:'-40% 0px -55% 0px'});
@@ -394,13 +417,13 @@ let cart={},mode='Delivery',pay='Yape',flavor='BBQ',step=1;
 const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 cart=store.get('lyb-cart2',{});
 const me=store.get('lyb-me',{});['nombre','dir','ref'].forEach(k=>{if(me[k])$('#'+k).value=me[k]});
-const PROMO={'promo-alitas-BBQ':{n:'Promo alitas BBQ',p:15,img:P+'alitas-bbq.jpg'},'promo-alitas-Búfalo':{n:'Promo alitas búfalo',p:15,img:P+'alitas-bufalo.jpg'},'promo-alitas-Acevichadas':{n:'Promo alitas acevichadas',p:15,img:P+'alitas-acevichada.jpg'},'promo-broaster':{n:'Promo broaster',p:11,img:P+'broaster.jpg'}};
+const PROMO={'promo-alitas-BBQ':{n:'Promo alitas BBQ',p:15,img:P+'alitas-bbq.webp'},'promo-alitas-Búfalo':{n:'Promo alitas búfalo',p:15,img:P+'alitas-bufalo.webp'},'promo-alitas-Acevichadas':{n:'Promo alitas acevichadas',p:15,img:P+'alitas-acevichada.webp'},'promo-broaster':{n:'Promo broaster',p:11,img:P+'broaster.webp'}};
 const info=k=>ITEMS[k]||PROMO[k];
 Object.keys(cart).forEach(k=>{if(!info(k))delete cart[k]});
 $('#pickAlitas').innerHTML=['BBQ','Búfalo','Acevichadas'].map(f=>`<button data-f="${f}" class="${f===flavor?'on':''}">${f}</button>`).join('');
 $('#pickAlitas').addEventListener('click',e=>{const b=e.target.closest('[data-f]');if(!b)return;flavor=b.dataset.f;document.querySelectorAll('#pickAlitas button').forEach(x=>x.classList.toggle('on',x===b))});
 const toast=m=>{const el=$('#toast');el.textContent=m;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),1600)};
-const setQ=(k,d)=>{cart[k]=(cart[k]||0)+d;if(cart[k]<1)delete cart[k];store.set('lyb-cart2',cart);if(d>0)toast('Agregado: '+info(k).n);render()};
+const setQ=(k,d)=>{cart[k]=(cart[k]||0)+d;if(cart[k]<1)delete cart[k];store.set('lyb-cart2',cart);if(d>0){toast('Agregado: '+info(k).n);play('add');buzz()}else play('tap');render()};
 document.addEventListener('click',e=>{
  const a=e.target.closest('[data-q]');if(a){setQ(a.dataset.q,+a.dataset.d);return}
  const p=e.target.closest('[data-promo]');
@@ -438,12 +461,33 @@ $('#pay').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!
 ['#nombre','#dir','#ref','#nota','#cash'].forEach(s=>$(s).addEventListener('input',()=>{$(s).classList.remove('bad');render()}));
 const copy=async()=>{try{await navigator.clipboard.writeText(YAPE);toast('Número copiado: '+YAPE)}catch(e){toast('Yape: 920 164 583')}};
 $('#copyYape').addEventListener('click',copy);$('#copyYape2').addEventListener('click',copy);
-$('#wa').addEventListener('click',()=>{$('#doneTxt').textContent=pay==='Yape'?`Tu pedido #${code} se abrió en WhatsApp. Envíalo y luego yapea:`:`Tu pedido #${code} se abrió en WhatsApp. Solo envía el mensaje y listo.`;$('#doneYape').hidden=pay!=='Yape';setTimeout(()=>show(4),400)});
+$('#wa').addEventListener('click',()=>{play('send');$('#doneTxt').textContent=pay==='Yape'?`Tu pedido #${code} se abrió en WhatsApp. Envíalo y luego yapea:`:`Tu pedido #${code} se abrió en WhatsApp. Solo envía el mensaje y listo.`;$('#doneYape').hidden=pay!=='Yape';setTimeout(()=>show(4),400)});
 $('#newOrder').addEventListener('click',()=>{cart={};store.set('lyb-cart2',cart);newCode();close()});
 const open=()=>{$('#sheet').classList.add('open');document.body.style.overflow='hidden';show(step===4?1:step)},close=()=>{$('#sheet').classList.remove('open');document.body.style.overflow='';if(step===4)step=1;render()};
 $('#openCart').addEventListener('click',open);$('#barBtn').addEventListener('click',open);$('#closeCart').addEventListener('click',close);$('#sheetBg').addEventListener('click',close);
 addEventListener('keydown',e=>{if(e.key==='Escape')close()});
 render();
+/* sound (sin archivos: se genera en el navegador) */
+let AC=null,sndOn=store.get('lyb-snd',true);
+const sndBtn=$('#snd');const sndUI=()=>{sndBtn.setAttribute('aria-pressed',sndOn);sndBtn.setAttribute('aria-label',sndOn?'Sonido activado':'Sonido apagado');$('#sndw').style.display=sndOn?'':'none'};sndUI();
+sndBtn.addEventListener('click',()=>{sndOn=!sndOn;store.set('lyb-snd',sndOn);sndUI();if(sndOn)play('add')});
+const tone=(f1,f2,t0,d,type='triangle',g=.09)=>{const o=AC.createOscillator(),v=AC.createGain();o.type=type;o.frequency.setValueAtTime(f1,AC.currentTime+t0);o.frequency.exponentialRampToValueAtTime(f2,AC.currentTime+t0+d);v.gain.setValueAtTime(0.0001,AC.currentTime+t0);v.gain.exponentialRampToValueAtTime(g,AC.currentTime+t0+.01);v.gain.exponentialRampToValueAtTime(0.0001,AC.currentTime+t0+d);o.connect(v).connect(AC.destination);o.start(AC.currentTime+t0);o.stop(AC.currentTime+t0+d+.02)};
+function play(kind){if(!sndOn)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+ if(kind==='add'){tone(520,880,0,.09);tone(880,1320,.07,.1,'sine',.06)}
+ else if(kind==='send'){[523,659,784,1047].forEach((f,i)=>tone(f,f*1.01,i*.09,.22,'sine',.08))}
+ else if(kind==='tap'){tone(700,500,0,.05,'sine',.05)}}catch(e){}}
+const buzz=()=>{try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}};
+/* slideshow de platos */
+const SL=[['s-alitas-bbq','alitas-0'],['s-salchipapa-especial','salchipapas-1'],['s-broaster','broaster-0'],['s-alitas-acevichada','alitas-2'],['s-lomo-saltado','platos-0'],['s-taypa','broaster-6'],['s-alitas-bufalo','alitas-1'],['s-bistec-pobre','platos-1'],['s-tequenos','piqueos-0'],['s-combo-familiar','broaster-7'],['s-mollejitas','platos-8']];
+const slides=$('#slides');slides.innerHTML=SL.map((x,i)=>`<img ${i?'data-src':'src'}="${P+x[0]}.webp" alt="${ITEMS[x[1]].n}" decoding="async"${i?'':' class="on" fetchpriority="high"'}>`).join('');
+$('#dots').innerHTML=SL.map((x,i)=>`<button aria-label="Ver ${ITEMS[x[1]].n}" data-sl="${i}"${i?'':' class="on"'}></button>`).join('');
+const imgs=[...slides.children],dots=[...$('#dots').children];let si=0,timer=null;
+addEventListener('load',()=>imgs.forEach(im=>{if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}}));
+const go=n=>{if(n===si)return;const prev=imgs[si];prev.classList.remove('on');prev.classList.add('out');setTimeout(()=>prev.classList.remove('out'),1200);si=(n+SL.length)%SL.length;const im=imgs[si];if(im.dataset.src){im.src=im.dataset.src;im.removeAttribute('data-src')}im.classList.add('on');dots.forEach((d,i)=>d.classList.toggle('on',i===si));const it=ITEMS[SL[si][1]];$('#capName').textContent=it.n;$('#capPrice').textContent=sol(it.p)};
+const auto=()=>{clearInterval(timer);timer=setInterval(()=>{if(!document.hidden)go(si+1)},2800)};auto();
+$('#dots').addEventListener('click',e=>{const b=e.target.closest('[data-sl]');if(b){go(+b.dataset.sl);auto()}});
+$('#capAdd').addEventListener('click',()=>setQ(SL[si][1],1));
+let tx=null;slides.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});slides.addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){go(si+(dx<0?1:-1));auto()}tx=null});
 /* embers */
 const cv=$('#embers'),cx=cv.getContext('2d');let PS=[],w=0,h=0;
 const size=()=>{const r=cv.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);w=r.width;h=r.height;cv.width=w*d;cv.height=h*d;cx.setTransform(d,0,0,d,0,0)};
