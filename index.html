@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lenaybrasas.pages.dev/">
 <meta name="theme-color" content="#140b07">
+<script type="importmap">{"imports":{"three":"./lib/three/three.module.min.js","three/addons/":"./lib/three/"}}</script>
 <link rel="preload" as="image" href="img/h-alitas-bbq.webp" fetchpriority="high">
 <link rel="preload" as="font" type="font/woff2" href="lib/fonts/bebas-neue-latin-400-normal.woff2" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Ccircle cx=%2232%22 cy=%2232%22 r=%2230%22 fill=%22%23140b07%22/%3E%3Cpath d=%22M32 10c4 10 14 14 14 26a14 14 0 0 1-28 0c0-7 4-10 6-15 1 5 4 7 6 7-2-6 0-12 2-18z%22 fill=%22%23ff6a1a%22/%3E%3C/svg%3E">
@@ -114,14 +115,25 @@ button{font:inherit;color:inherit;cursor:pointer}
 .pick button.on{background:#1a0b04;color:var(--fire2);border-color:#1a0b04}
 .promo .cta{margin-top:12px;min-height:46px}
 /* ring */
-.stage{height:320px;perspective:1100px;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
-.ring{position:relative;width:156px;height:214px;transform-style:preserve-3d}
-.face{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#1c0f09;border:1px solid #5a3424;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 20px 40px rgba(0,0,0,.45);text-align:left}
-.face img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.face::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(10,5,2,.92))}
-.face b,.face span{position:relative;z-index:1}
-.face b{font-family:Bebas,sans-serif;font-weight:400;font-size:27px;line-height:1}
-.face span{font-size:12px;color:var(--mute)}
+.stage{position:relative;height:clamp(400px,118vw,520px);perspective:1300px;display:grid;place-items:center;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;overflow:hidden;margin:0 calc(-1*max(4vw,14px))}
+.stage::before{content:"";position:absolute;left:10%;right:10%;bottom:6%;height:30%;background:radial-gradient(ellipse at 50% 50%,rgba(255,106,26,.45),rgba(255,106,26,0) 70%);filter:blur(12px);animation:glow 3s ease-in-out infinite;pointer-events:none}
+.ring{position:relative;width:clamp(190px,56vw,250px);aspect-ratio:3/4;transform-style:preserve-3d;margin-top:-30px}
+.face{position:absolute;inset:0;border:0;padding:0;background:none;backface-visibility:hidden;-webkit-backface-visibility:hidden;color:inherit;font:inherit;text-align:left}
+.fi{position:absolute;inset:0;border-radius:26px;overflow:hidden;background:#1c0f09;border:1px solid #5a3424;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;box-shadow:0 24px 50px rgba(0,0,0,.55);transition:transform .5s cubic-bezier(.2,.8,.2,1),filter .5s,box-shadow .5s;filter:brightness(.5) saturate(.75);-webkit-box-reflect:below 10px linear-gradient(transparent 72%,rgba(255,255,255,.16))}
+.fi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.2s ease}
+.fi::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(10,5,2,.94))}
+.fi::before{content:"";position:absolute;inset:-40%;z-index:2;background:linear-gradient(110deg,transparent 42%,rgba(255,235,200,.35) 50%,transparent 58%);transform:translateX(-80%);pointer-events:none}
+.fi>*{position:relative;z-index:1}
+.fi b{font-family:Bebas,sans-serif;font-weight:400;font-size:clamp(32px,9vw,40px);line-height:.95}
+.fi span{font-size:13px;color:var(--mute);margin-top:4px}
+.fi i{font-style:normal;align-self:flex-start;margin-top:10px;background:var(--fire);color:#1a0b04;font-weight:800;font-size:13px;border-radius:999px;padding:7px 14px;opacity:0;transform:translateY(8px);transition:.4s .15s}
+.face.front .fi{filter:none;transform:scale(1.07);box-shadow:0 0 0 2px var(--fire),0 0 50px rgba(255,106,26,.45),0 30px 60px rgba(0,0,0,.6)}
+.face.front .fi img{transform:scale(1)}
+.face.front .fi i{opacity:1;transform:none}
+.face.front .fi::before{animation:shine 3s ease-in-out infinite .6s}
+@keyframes shine{0%{transform:translateX(-80%)}45%,100%{transform:translateX(80%)}}
+.rnav{position:absolute;top:44%;z-index:5;width:48px;height:48px;border-radius:50%;border:1px solid #5a3424;background:rgba(20,11,7,.8);color:var(--ink);font-size:26px;line-height:1;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.rnav.l{left:max(4vw,10px)}.rnav.r{right:max(4vw,10px)}
 .hint{text-align:center;color:var(--mute);font-size:13px;margin:0}
 /* tabs + menu */
 .tabs{position:sticky;top:58px;z-index:20;background:rgba(20,11,7,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
@@ -148,6 +160,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .qtyc{display:flex;align-items:center;gap:4px;background:#1a0b04;border-radius:12px;padding:3px}
 .qtyc button{width:36px;height:36px;border-radius:9px;border:0;background:var(--fire);color:#1a0b04;font-weight:800;font-size:18px}
 .qtyc b{min-width:20px;text-align:center}
+.b3d{position:absolute;right:8px;top:8px;display:flex;align-items:center;gap:5px;min-height:34px;padding:0 11px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(13,6,4,.62);color:#fff;font-weight:800;font-size:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:b3d 3s ease-in-out infinite}
+.b3d svg{width:16px;height:16px}
+@keyframes b3d{50%{box-shadow:0 0 0 4px rgba(255,178,26,.25)}}
+.cap .b3d{position:static;background:transparent;border-color:#5a3424;min-height:40px;animation:none}
 .badge{position:absolute;left:8px;top:8px;background:var(--fire2);color:#1a0b04;font-size:11px;font-weight:800;border-radius:8px;padding:3px 8px}
 :is(.add,.cta,.tabs a,.cartbtn,.face,.qtyc button,.wa,.pick button):focus-visible{outline:3px solid var(--fire2);outline-offset:2px}
 footer{margin-top:36px;padding:36px 0 120px;background:linear-gradient(180deg,transparent,#2a1209);border-top:1px solid var(--line)}
@@ -218,7 +234,7 @@ footer p{color:var(--mute);margin:8px 0}
 .toast{position:fixed;left:50%;top:72px;transform:translateX(-50%);background:var(--ink);color:var(--bg);font-weight:800;border-radius:999px;padding:10px 18px;z-index:60;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
 .toast.show{opacity:1}
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(min-width:860px){.hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"t p" "r p"}.promos{grid-template-columns:1fr 1fr}.stage{height:370px}}
+@media(min-width:860px){.hero .wrap{grid-template-columns:1.05fr .95fr;grid-template-areas:"t p" "r p"}.promos{grid-template-columns:1fr 1fr}}
 @media(min-width:1060px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:430px){.promo{grid-template-columns:1fr}.promo .ph{min-height:200px;order:-1}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
@@ -246,7 +262,7 @@ footer p{color:var(--mute);margin:8px 0}
         <div class="slides" id="slides" aria-live="polite"></div>
         <div class="tag" id="heroTag"></div>
       </div>
-      <div class="cap"><span id="capName">Alitas BBQ</span><b id="capPrice">S/ 17</b><button class="add" id="capAdd">+ Agregar</button></div>
+      <div class="cap"><span id="capName">Alitas BBQ</span><b id="capPrice">S/ 17</b><button class="b3d" id="cap3d" aria-label="Ver en 3D"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>3D</button><button class="add" id="capAdd">+ Agregar</button></div>
       <div class="dots" id="dots" aria-label="Elegir plato"></div>
     </div>
     <div class="h-r">
@@ -255,9 +271,6 @@ footer p{color:var(--mute);margin:8px 0}
     </div>
   </div>
 </section>
-
-<nav class="tabs" aria-label="Categorías"><div class="wrap" id="tabs"></div></nav>
-<main class="wrap" id="carta"></main>
 
 <section class="band" id="promos"><div class="wrap">
   <h2 class="sec-t"><small>Cada día tiene su antojo</small>Promos de la semana</h2>
@@ -287,12 +300,15 @@ footer p{color:var(--mute);margin:8px 0}
   </div>
 </div></section>
 
+<nav class="tabs" aria-label="Categorías"><div class="wrap" id="tabs"></div></nav>
+<main class="wrap" id="carta"></main>
+
+
 <section class="band" style="padding-top:0"><div class="wrap">
   <h2 class="sec-t"><small>Gira la parrilla</small>¿Qué se te antoja?</h2>
-  <div class="stage" id="stage"><div class="ring" id="ring"></div></div>
-  <p class="hint">Desliza para girar · toca una categoría para verla</p>
+  <div class="stage" id="stage"><button class="rnav l" id="rPrev" aria-label="Anterior">‹</button><div class="ring" id="ring"></div><button class="rnav r" id="rNext" aria-label="Siguiente">›</button></div>
+  <p class="hint">Desliza o usa las flechas · toca la categoría del frente para ver sus platos</p>
 </div></section>
-
 <footer><div class="wrap">
   <div class="logo">Leña y Brasas</div>
   <p>Av. Luis Pardo 116, Villa María del Triunfo</p>
@@ -417,21 +433,32 @@ $('#heroTag').innerHTML=`${t.lbl}<strong>S/ ${t.big}</strong>`;
 const W=[[1,'Lun','Broaster','S/ 11'],[2,'Mar','Alitas','S/ 15'],[3,'Mié','Broaster','S/ 11'],[4,'Jue','Alitas','S/ 15'],[5,'Vie','Combo','S/ 48'],[6,'Sáb','Combo','S/ 48'],[0,'Dom','Combo','S/ 48']];
 $('#week').innerHTML=W.map(([d,n,w,p])=>`<div class="day${d===dow?' on':''}"><span class="d">${n}</span><span class="w">${w}</span><span class="p">${p}</span></div>`).join('');
 /* ring */
-const ring=$('#ring'),N=CATS.length;
-ring.innerHTML=CATS.map((c,i)=>`<button class="face" data-go="${c.id}" style="transform:rotateY(${i*360/N}deg) translateZ(var(--r))"><img src="${P+c.img}" alt="" loading="lazy" decoding="async"><b>${c.name}</b><span>desde ${sol(Math.min(...c.items.map(x=>x[2])))}</span></button>`).join('');
-let ang=0,vel=0,drag=false,lastX=0,moved=0;
+const ring=$('#ring'),N=CATS.length,STEP=360/N;
+ring.innerHTML=CATS.map((c,i)=>`<button class="face" data-go="${c.id}" data-i="${i}" style="transform:rotateY(${i*STEP}deg) translateZ(var(--r))"><span class="fi"><img src="${P+c.img}" alt="" loading="lazy" decoding="async"><b>${c.name}</b><span>${c.items.length} platos · desde ${sol(Math.min(...c.items.map(x=>x[2])))}</span><i>Ver platos →</i></span></button>`).join('');
+const faces=[...ring.children];let ang=0,tgt=0,vel=0,drag=false,lastX=0,moved=0,lastAuto=performance.now(),ringVis=false;
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const R=()=>ring.style.setProperty('--r',Math.round(ring.offsetWidth/2/Math.tan(Math.PI/N))+26+'px');R();addEventListener('resize',R);
+const R=()=>ring.style.setProperty('--r',Math.round(ring.offsetWidth/2/Math.tan(Math.PI/N))+34+'px');R();addEventListener('resize',R);
 const stage=$('#stage');
-stage.addEventListener('pointerdown',e=>{drag=true;lastX=e.clientX;moved=0;stage.setPointerCapture(e.pointerId)});
-stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lastX;lastX=e.clientX;moved+=Math.abs(dx);ang+=dx*.35;vel=dx*.35});
-stage.addEventListener('pointerup',e=>{if(!drag)return;drag=false;if(moved<6){const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-go]');if(el)document.getElementById(el.dataset.go).scrollIntoView()}});
-stage.addEventListener('pointercancel',()=>drag=false);
+const front=()=>((-Math.round(tgt/STEP))%N+N)%N;
+const toFace=i=>{const cur=front();let d=i-cur;if(d>N/2)d-=N;if(d<-N/2)d+=N;tgt-=d*STEP;lastAuto=performance.now()};
+stage.addEventListener('pointerdown',e=>{if(e.target.closest('.rnav'))return;drag=true;lastX=e.clientX;moved=0;vel=0;stage.setPointerCapture(e.pointerId)});
+stage.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lastX;lastX=e.clientX;moved+=Math.abs(dx);ang+=dx*.4;vel=dx*.4;tgt=ang});
+stage.addEventListener('pointerup',e=>{if(!drag)return;drag=false;lastAuto=performance.now();
+ if(moved<6){const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-go]');if(el){const i=+el.dataset.i;if(i===front()){play('tap');document.getElementById(el.dataset.go).scrollIntoView()}else{play('tap');toFace(i)}}}
+ else{tgt=Math.round((ang+vel*10)/STEP)*STEP}});
+stage.addEventListener('pointercancel',()=>{drag=false;tgt=Math.round(ang/STEP)*STEP});
+$('#rPrev').addEventListener('click',()=>{tgt+=STEP;lastAuto=performance.now();play('tap')});
+$('#rNext').addEventListener('click',()=>{tgt-=STEP;lastAuto=performance.now();play('tap')});
 ring.addEventListener('keydown',e=>{const b=e.target.closest('[data-go]');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();document.getElementById(b.dataset.go).scrollIntoView()}});
-const spin=()=>{if(!drag){vel*=.95;ang+=vel+(reduce?0:.12)}ring.style.transform=`translateZ(calc(var(--r) * -1)) rotateX(-6deg) rotateY(${ang}deg)`;requestAnimationFrame(spin)};spin();
+new IntersectionObserver(es=>ringVis=es[0].isIntersecting).observe(stage);
+let lastFront=-1;
+const spin=now=>{if(!drag){if(!reduce&&ringVis&&now-lastAuto>2800){tgt-=STEP;lastAuto=now}ang+=(tgt-ang)*.085}
+ ring.style.transform=`translateZ(calc(var(--r) * -1)) rotateX(-4deg) rotateY(${ang}deg)`;
+ const f=front();if(f!==lastFront){faces.forEach((el,i)=>el.classList.toggle('front',i===f));lastFront=f}
+ requestAnimationFrame(spin)};requestAnimationFrame(spin);
 /* menu */
 $('#tabs').innerHTML=CATS.map(c=>`<a href="#${c.id}" data-tab="${c.id}">${c.name}</a>`).join('');
-$('#carta').innerHTML=CATS.map(c=>`<section class="cat" id="${c.id}"><div class="cat-head"><h2 class="sec-t">${c.name}</h2><p>${c.sub}</p></div><div class="grid">${c.items.map((it,j)=>{const k=c.id+'-'+j;return `<article class="card"><div class="ph"><img src="${P+it[3]}" alt="${it[0]}" loading="lazy" decoding="async" width="560" height="420">${it[4]?`<span class="badge">${it[4]}</span>`:''}</div><div class="bd"><h3>${it[0]}</h3><p>${it[1]}</p><div class="row"><span class="pr">${sol(it[2])}</span><span data-ctl="${k}"></span></div></div></article>`}).join('')}</div></section>`).join('');
+$('#carta').innerHTML=CATS.map(c=>`<section class="cat" id="${c.id}"><div class="cat-head"><h2 class="sec-t">${c.name}</h2><p>${c.sub}</p></div><div class="grid">${c.items.map((it,j)=>{const k=c.id+'-'+j;return `<article class="card"><div class="ph"><img src="${P+it[3]}" alt="${it[0]}" loading="lazy" decoding="async" width="560" height="420">${it[4]?`<span class="badge">${it[4]}</span>`:''}<button class="b3d" data-3d="${k}" aria-label="Ver ${it[0]} en 3D"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="M3 7l9 5 9-5M12 12v10"/></svg>3D</button></div><div class="bd"><h3>${it[0]}</h3><p>${it[1]}</p><div class="row"><span class="pr">${sol(it[2])}</span><span data-ctl="${k}"></span></div></div></article>`}).join('')}</div></section>`).join('');
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
 document.querySelectorAll('.card').forEach((el,i)=>{el.style.transitionDelay=(i%4)*70+'ms';io.observe(el)});
 const tabIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('.tabs a').forEach(a=>a.classList.toggle('on',a.dataset.tab===e.target.id));const a=document.querySelector(`.tabs a[data-tab="${e.target.id}"]`);a&&a.parentNode.scrollTo({left:a.offsetLeft-20,behavior:'smooth'})}}),{rootMargin:'-40% 0px -55% 0px'});
@@ -512,6 +539,15 @@ $('#gpsBtn').addEventListener('click',()=>{play('tap');
    gpsUI('ok',`Listo (precisión ±${loc.acc} m). <a href="${mapUrl(loc)}" target="_blank" rel="noopener" style="color:inherit">Ver en el mapa</a>`);$('#dir').classList.remove('bad');$('#err2').textContent='';play('add');render();lookup(loc)},
   e=>{loc=null;gpsUI('warn',e.code===1?'No diste permiso de ubicación. Escribe tu dirección; al final te diremos cómo enviarla por WhatsApp.':'No pudimos obtener tu ubicación. Escribe tu dirección y envíala por WhatsApp al final.');render()},
   {enableHighAccuracy:true,timeout:15000,maximumAge:120000})});
+/* visor 3D (se descarga solo cuando el cliente lo abre) */
+const KEYS=Object.keys(ITEMS);
+const base=k=>ITEMS[k].img.split('/').pop().replace('.webp','');
+const open3d=k=>{play('tap');const ld=$('#toast');toast('Abriendo vista 3D…');
+ import('./viewer3d.js').then(m=>{if(!m.supported()){toast('Tu teléfono no permite la vista 3D');return}
+  const list=KEYS.map(x=>({key:x,name:ITEMS[x].n,price:sol(ITEMS[x].p),tex:`img/3d/${base(x)}.webp`,depth:`img/3d/${base(x)}-z.png`}));
+  m.open(list,KEYS.indexOf(k),{onAdd:x=>setQ(x,1)})}).catch(()=>toast('No se pudo abrir la vista 3D'))};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-3d]');if(b){e.stopPropagation();open3d(b.dataset['3d'])}});
+$('#cap3d').addEventListener('click',()=>open3d(SL[si][1]));
 /* sonido: se fabrica en el teléfono como audio WAV (0 KB de descarga) y se reproduce con <audio>, que suena también en iPhone */
 let sndOn=store.get('lyb-snd',true),unlocked=false;const SND={};
 const sndBtn=$('#snd');const sndUI=()=>{sndBtn.setAttribute('aria-pressed',sndOn);sndBtn.setAttribute('aria-label',sndOn?'Sonido activado':'Sonido apagado');$('#sndw').style.display=sndOn?'':'none';sndBtn.classList.toggle('off',!sndOn)};sndUI();
