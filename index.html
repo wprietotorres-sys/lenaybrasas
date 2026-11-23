@@ -544,7 +544,7 @@ const KEYS=Object.keys(ITEMS);
 const base=k=>ITEMS[k].img.split('/').pop().replace('.webp','');
 const open3d=k=>{play('tap');const ld=$('#toast');toast('Abriendo vista 3D…');
  import('./viewer3d.js').then(m=>{if(!m.supported()){toast('Tu teléfono no permite la vista 3D');return}
-  const list=KEYS.map(x=>({key:x,name:ITEMS[x].n,price:sol(ITEMS[x].p),tex:`img/3d/${base(x)}.webp`,depth:`img/3d/${base(x)}-z.png`}));
+  const list=KEYS.map(x=>({key:x,name:ITEMS[x].n,price:sol(ITEMS[x].p),desc:ITEMS[x].d,tex:`img/3d/${base(x)}.webp`,rough:`img/3d/${base(x)}-r.webp`,depth:`img/3d/${base(x)}-d.png`}));
   m.open(list,KEYS.indexOf(k),{onAdd:x=>setQ(x,1)})}).catch(()=>toast('No se pudo abrir la vista 3D'))};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-3d]');if(b){e.stopPropagation();open3d(b.dataset['3d'])}});
 $('#cap3d').addEventListener('click',()=>open3d(SL[si][1]));
